@@ -24,8 +24,8 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.log4j.Logger;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 /***
  * General Utility function
  * 
@@ -34,7 +34,7 @@ import org.apache.log4j.Logger;
  */
 public class Utils {
 
-	private static final Logger LOGGER = Logger.getLogger(Utils.class);
+	private static final Logger LOGGER = LogManager.getLogger(Utils.class);
 
 	/***
 	 * Return text appended with unique String

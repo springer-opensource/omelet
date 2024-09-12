@@ -16,7 +16,7 @@
  *******************************************************************************/
 package omelet.data.driverconf;
 
-import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.Capabilities;
 
 public interface IBrowserConf {
 
@@ -50,10 +50,8 @@ public interface IBrowserConf {
 	boolean isScreenShotFlag();
 	
 	String getDataSource();
-	
-	DesiredCapabilities getCapabilities();
-	
-	void updateCapabilities(DesiredCapabilities dc);
-	
+
+	Capabilities getCapabilities();
+
 
 }

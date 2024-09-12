@@ -1,10 +1,11 @@
 package omelet.driver;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class Logo {
 
-	private static final Logger LOGGER = Logger.getLogger(Logo.class);
+	private static final Logger LOGGER = LogManager.getLogger(Logo.class);
 	/*private final PropertyValueMin prop = new PropertyValueMin(Utils.getResources(this,
 			"omelet-builtin.properties"));*/
 	private static Logo instance;

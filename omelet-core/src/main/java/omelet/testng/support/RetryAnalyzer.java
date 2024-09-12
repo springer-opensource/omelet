@@ -16,13 +16,14 @@
  *******************************************************************************/
 package omelet.testng.support;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.testng.IRetryAnalyzer;
+import org.testng.ITestResult;
+
 import omelet.configuration.DefaultBrowserConf;
 import omelet.data.driverconf.IBrowserConf;
 import omelet.driver.Driver;
-
-import org.apache.log4j.Logger;
-import org.testng.IRetryAnalyzer;
-import org.testng.ITestResult;
 
 /***
  * For Re-Running Failed Test Cases
@@ -32,7 +33,7 @@ import org.testng.ITestResult;
  */
 public class RetryAnalyzer implements IRetryAnalyzer {
 
-	private static final Logger LOGGER = Logger.getLogger(RetryAnalyzer.class);
+	private static final Logger LOGGER = LogManager.getLogger(RetryAnalyzer.class);
 	private int count = 0;
 
 	public boolean retry(ITestResult result) {

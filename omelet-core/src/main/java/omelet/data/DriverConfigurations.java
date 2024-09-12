@@ -56,9 +56,8 @@ public class DriverConfigurations {
 	 */
 	public enum CloudConfig {
 		/*
-		 * device(""), browserVersion(""), os(""), osVersion( ""),
-		 * bsSwitch("false"), , bs_localTesting( "false"), bs_urls(""),
-		 * platform(""), mobileTest("false");
+		 * device(""), browserVersion(""), os(""), osVersion( ""), bsSwitch("false"), ,
+		 * bs_localTesting( "false"), bs_urls(""), platform(""), mobileTest("false");
 		 */
 		username(""), key("");
 		private String defaultValue;
@@ -79,49 +78,37 @@ public class DriverConfigurations {
 	 */
 	public enum LocalEnvironmentConfig {
 
-		browsername("FireFox"), iedriverpath(System.getProperty("user.dir")
-				+ "/src/main/resources/IEDriverServer.exe".replace("/",
-						File.separator)), chromedriverpath(System
-				.getProperty("user.dir")
-				+ "/src/main/resources/chromedriver".replace("/",
-						File.separator)), phantomdriverpath(System
-								.getProperty("user.dir")
-								+ "/src/main/resources/phantomjs".replace("/",
-										File.separator)),firefoxdriverpath(System
-				.getProperty("user.dir")
-				+ "/src/main/resources/geckodriver".replace("/",
-				File.separator));
+	browsername("fireFox"),
+	iedriverpath(System.getProperty("user.dir") + "/src/main/resources/IEDriverServer.exe".replace("/", File.separator)),
+	chromedriverpath(System.getProperty("user.dir")+ "/src/main/resources/chromedriver".replace("/", File.separator)), 
+	phantomdriverpath(System.getProperty("user.dir") + "/src/main/resources/phantomjs".replace("/",File.separator)),
+	firefoxdriverpath(System.getProperty("user.dir")+ "/src/main/resources/geckodriver".replace("/", File.separator));
 
 		private String defaultValue;
 
 		LocalEnvironmentConfig(String defaultValue) {
 			if (defaultValue.contains("chromedriver")) {
 				if (OSName.get().equals(OSN.WIN)) {
-					this.defaultValue = defaultValue.replace("chromedriver",
-							"chromedriver.exe");
+					this.defaultValue = defaultValue.replace("chromedriver", "chromedriver.exe");
 				} else {
 					this.defaultValue = defaultValue;
 				}
-			}
-			else if (defaultValue.contains("firefox")) {
+			} else if (defaultValue.contains("geckodriver")) {
 				if (OSName.get().equals(OSN.WIN)) {
-					this.defaultValue = defaultValue.replace("geckodriver",
-							"geckodriver.exe");
+					this.defaultValue = defaultValue.replace("geckodriver", "geckodriver.exe");
 				} else {
 					this.defaultValue = defaultValue;
 				}
-			}
-			else if (defaultValue.contains("phantomjs")) {
+			} else if (defaultValue.contains("phantomjs")) {
 				if (OSName.get().equals(OSN.WIN)) {
-					this.defaultValue = defaultValue.replace("phantomjs",
-							"phantomjs.exe");
+					this.defaultValue = defaultValue.replace("phantomjs", "phantomjs.exe");
 				} else {
 					this.defaultValue = defaultValue;
 				}
 			} else {
 				this.defaultValue = defaultValue;
 			}
-			
+
 		}
 
 		public String get() {

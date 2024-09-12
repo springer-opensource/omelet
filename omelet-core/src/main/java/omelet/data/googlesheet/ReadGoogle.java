@@ -4,23 +4,24 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.*;
-
-import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
-import com.google.api.client.http.HttpTransport;
-import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.gdata.client.spreadsheet.FeedURLFactory;
-import omelet.data.IDataSource;
-import omelet.data.IMappingData;
-import omelet.data.IProperty;
-import omelet.data.ImplementIMap;
-import omelet.data.PropertyMapping;
-import omelet.data.driverconf.IBrowserConf;
-import omelet.data.driverconf.PrepareDriverConf;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
+import com.google.api.client.auth.oauth2.Credential;
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.services.sheets.v4.SheetsScopes;
 import com.google.gdata.client.spreadsheet.SpreadsheetService;
 import com.google.gdata.data.spreadsheet.ListEntry;
 import com.google.gdata.data.spreadsheet.ListFeed;
@@ -29,10 +30,14 @@ import com.google.gdata.data.spreadsheet.SpreadsheetFeed;
 import com.google.gdata.data.spreadsheet.WorksheetEntry;
 import com.google.gdata.util.AuthenticationException;
 import com.google.gdata.util.ServiceException;
-import com.google.api.client.auth.oauth2.Credential;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.services.sheets.v4.SheetsScopes;
-import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+
+import omelet.data.IDataSource;
+import omelet.data.IMappingData;
+import omelet.data.IProperty;
+import omelet.data.ImplementIMap;
+import omelet.data.PropertyMapping;
+import omelet.data.driverconf.IBrowserConf;
+import omelet.data.driverconf.PrepareDriverConf;
 
 public class ReadGoogle implements IDataSource {
 
@@ -41,7 +46,7 @@ public class ReadGoogle implements IDataSource {
     private SpreadsheetEntry spreadSheet;
     private SpreadsheetService service = null;
     private String sheetName = null;
-    private static final Logger LOGGER = Logger.getLogger(ReadGoogle.class);
+    private static final Logger LOGGER = LogManager.getLogger(ReadGoogle.class);
     private static Map<String, List<IBrowserConf>> browserBucket = new HashMap<String, List<IBrowserConf>>();
     private static Map<String, List<IProperty>> dataBucket = new HashMap<String, List<IProperty>>();
     private static Map<String, IMappingData> mappingBucket = new HashMap<String, IMappingData>();

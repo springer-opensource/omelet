@@ -2,22 +2,22 @@ package omelet.data.driverconf;
 
 import java.util.Map;
 
-import omelet.data.DriverConfigurations;
+import org.openqa.selenium.MutableCapabilities;
 
-import org.openqa.selenium.remote.DesiredCapabilities;
+import omelet.data.DriverConfigurations;
 
 public class BrowserConfR implements IBrowserConf {
 
 	private Map<String, String> mappedValues;
-	private DesiredCapabilities dc;
+	private MutableCapabilities mutableCapabilities;
 
 	public BrowserConfR(Map<String, String> completeBrowserMap) {
-		this(completeBrowserMap,new DesiredCapabilities());
+		this(completeBrowserMap,new MutableCapabilities());
 	}
 	
-	public BrowserConfR(Map<String, String> completeBrowserMap,DesiredCapabilities dc){
+	public BrowserConfR(Map<String, String> completeBrowserMap,MutableCapabilities dc){
 		mappedValues = completeBrowserMap;
-		this.dc = dc;
+		this.mutableCapabilities = dc;
 	}
 
 	public String getBrowser() {
@@ -200,8 +200,8 @@ public class BrowserConfR implements IBrowserConf {
 	}
 
 	@Override
-	public DesiredCapabilities getCapabilities() {
-		return dc;
+	public MutableCapabilities getCapabilities() {
+		return mutableCapabilities;
 	}
 	
 
@@ -213,11 +213,6 @@ public class BrowserConfR implements IBrowserConf {
 	@Override
 	public String port() {
 		return mappedValues.get(DriverConfigurations.HubConfig.port.toString());
-	}
-
-	@Override
-	public void updateCapabilities(DesiredCapabilities dc) {
-		this.dc.merge(dc);
 	}
 
 

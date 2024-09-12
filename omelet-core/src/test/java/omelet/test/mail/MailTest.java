@@ -3,7 +3,8 @@ package omelet.test.mail;
 import omelet.mail.Email;
 import omelet.mail.FilterEmails;
 import omelet.mail.MailProtocol;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -11,7 +12,7 @@ import org.testng.annotations.Test;
  * Created by borz01 on 27.08.15.
  */
 public class MailTest {
-    private static final Logger LOGGER = Logger.getLogger(MailTest.class);
+    private static final Logger LOGGER = LogManager.getLogger(MailTest.class);
     private String userName = null;
     private String password = null;
     private Email mail;

@@ -18,12 +18,13 @@ package omelet.configuration;
 
 import java.util.HashMap;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import omelet.data.DriverConfigurations;
 import omelet.data.IProperty;
 import omelet.data.driverconf.IBrowserConf;
 import omelet.data.driverconf.PrepareDriverConf;
-
-import org.apache.log4j.Logger;
 
 /***
  * This class set the variable required to configure Driver either from Command
@@ -34,8 +35,7 @@ import org.apache.log4j.Logger;
  */
 public class DefaultBrowserConf {
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger
-			.getLogger(DefaultBrowserConf.class);
+	private static final Logger LOGGER = LogManager.getLogger(DefaultBrowserConf.class);
 	private static IBrowserConf browserConf;
 	private static IProperty customProp;
 

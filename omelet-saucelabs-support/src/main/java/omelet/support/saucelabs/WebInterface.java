@@ -12,30 +12,30 @@ import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import omelet.data.xml.MappingParserRevisit;
 import omelet.driver.Driver;
 
 public class WebInterface {
-	private static final Logger LOGGER = Logger.getLogger(WebInterface.class);
+	private static final Logger Log = LogManager.getLogger(WebInterface.class);
 	String buildNumber;
 
-	public void updateSauceLabsJob(String jobID, String testName,
-			Boolean testResult) {
+	public void updateSauceLabsJob(String jobID, String testName, Boolean testResult) {
 		StringBuilder restApiCommand = new StringBuilder();
 		String projectName = MappingParserRevisit.getProjectName();
 		String user = Driver.getBrowserConf().getuserName();
 		String password = Driver.getBrowserConf().getKey();
 		String userpass = user + ":" + password;
 
-		LOGGER.debug("jobID: " + jobID);
-		LOGGER.debug("testName: " + testName);
-		LOGGER.debug("testResult: " + testResult);
+		Log.debug("jobID: " + jobID);
+		Log.debug("testName: " + testName);
+		Log.debug("testResult: " + testResult);
 
 		if (StringUtils.isNotBlank(MappingParserRevisit.getBuildNumber())) {
 			buildNumber = MappingParserRevisit.getBuildNumber();
-			LOGGER.debug("buildNumber: " + buildNumber);
+			Log.debug("buildNumber: " + buildNumber);
 		}
 
 		String url = "https://saucelabs.com/rest/v1/" + user + "/jobs/" + jobID;
@@ -50,8 +50,7 @@ public class WebInterface {
 			conn.setRequestMethod("PUT");
 
 			String basicAuth = "Basic "
-					+ javax.xml.bind.DatatypeConverter
-							.printBase64Binary(userpass.getBytes("UTF-8"));
+					+ javax.xml.bind.DatatypeConverter.printBase64Binary(userpass.getBytes("UTF-8"));
 			conn.setRequestProperty("Authorization", basicAuth);
 
 			if (projectName != "") {
@@ -76,17 +75,16 @@ public class WebInterface {
 
 			restApiCommand.append("}");
 
-			LOGGER.debug(restApiCommand);
+			Log.debug(restApiCommand);
 
-			OutputStreamWriter out = new OutputStreamWriter(
-					conn.getOutputStream());
+			OutputStreamWriter out = new OutputStreamWriter(conn.getOutputStream());
 			out.write(restApiCommand.toString());
 			out.close();
 
 			new InputStreamReader(conn.getInputStream());
 
 		} catch (Exception e) {
-			LOGGER.error(e);
+			Log.error(e);
 			e.printStackTrace();
 		}
 	}
@@ -109,8 +107,8 @@ public class WebInterface {
 		src.toString();
 
 		StringBuilder script = new StringBuilder();
-		script.append("<script type=\"text/javascript\">function addScript"
-				+ jobID + "() {var s = document.createElement( 'script' );");
+		script.append("<script type=\"text/javascript\">function addScript" + jobID
+				+ "() {var s = document.createElement( 'script' );");
 		script.append("s.setAttribute( 'src','" + src + "');");
 		script.append("var div = document.getElementById('" + jobID + "');");
 		script.append("div.appendChild( s );}</script>");
@@ -119,8 +117,7 @@ public class WebInterface {
 		inputToExecScript.append(script);
 		inputToExecScript.append("</br>");
 		inputToExecScript.append("<a onclick=\"addScript" + jobID + "()\">");
-		inputToExecScript
-				.append("Click here to display SauceLabs Report ::</a>");
+		inputToExecScript.append("Click here to display SauceLabs Report ::</a>");
 		inputToExecScript.append("<div id=\"" + jobID + "\"></div>");
 		return inputToExecScript.toString();
 	}
@@ -146,8 +143,7 @@ public class WebInterface {
 	private String genMD5hash(String keyString, String message) {
 		String sEncodedString = null;
 		try {
-			SecretKeySpec key = new SecretKeySpec(
-					(keyString).getBytes("UTF-8"), "HmacMD5");
+			SecretKeySpec key = new SecretKeySpec((keyString).getBytes("UTF-8"), "HmacMD5");
 			Mac mac = Mac.getInstance("HmacMD5");
 			mac.init(key);
 
@@ -164,11 +160,11 @@ public class WebInterface {
 			}
 			sEncodedString = hash.toString();
 		} catch (UnsupportedEncodingException e) {
-			LOGGER.error(e);
+			Log.error(e);
 		} catch (InvalidKeyException e) {
-			LOGGER.error(e);
+			Log.error(e);
 		} catch (NoSuchAlgorithmException e) {
-			LOGGER.error(e);
+			Log.error(e);
 		}
 		return sEncodedString;
 	}

@@ -22,15 +22,15 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-import omelet.exception.FrameworkException;
-
 import org.apache.commons.io.IOUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import omelet.exception.FrameworkException;
 
 public class PropertyValueMin {
 
@@ -40,8 +40,7 @@ public class PropertyValueMin {
 	Set<String> classEnumCheck = new HashSet<String>();
 	FileInputStream fis;
 	boolean isEnumMappingChecked;
-	private static final Logger LOGGER = Logger
-			.getLogger(PropertyValueMin.class);
+	private static final Logger LOGGER = LogManager.getLogger(PropertyValueMin.class);
 
 	public PropertyValueMin(Properties prop) {
 		this.prop = prop;

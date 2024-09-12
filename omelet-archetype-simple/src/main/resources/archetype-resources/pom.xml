@@ -3,46 +3,36 @@
   <modelVersion>4.0.0</modelVersion>
   <artifactId>${artifactId}</artifactId>
   <groupId>${groupId}</groupId>
+  	<properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
   <dependencies>
 		<dependency>
 			<groupId>com.springer</groupId>
 			<artifactId>omelet</artifactId>
-			<version>1.0.13</version>
+			<version>1.0.16</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.inject</groupId>
 			<artifactId>guice</artifactId>
-			<version>3.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.uncommons</groupId>
-			<artifactId>reportng</artifactId>
-			<version>1.1.2</version>
-			<type>jar</type>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.testng</groupId>
-			<artifactId>testng</artifactId>
-			<version>5.7</version>
-			<type>jar</type>
-			<classifier>jdk15</classifier>
-			<scope>compile</scope>
+			<version>4.1.0</version>
 		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
 			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
-				</configuration>
-			</plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.7.0</version>
+                    <configuration>
+                        <source>1.8</source>
+                        <target>1.8</target>
+                    </configuration>
+                </plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.16</version>
+				<version>2.20.1</version>
 				<configuration>
 					<systemPropertyVariables>
 						<env.type>${env-type}</env.type>

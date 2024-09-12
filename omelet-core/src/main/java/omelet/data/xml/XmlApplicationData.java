@@ -28,16 +28,17 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import omelet.common.Utils;
-import omelet.data.IProperty;
-import omelet.data.PropertyMapping;
-
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+
+import omelet.common.Utils;
+import omelet.data.IProperty;
+import omelet.data.PropertyMapping;
 
 /***
  * For Parssing Test Data xml return List of {@link IProperty}
@@ -50,8 +51,7 @@ public class XmlApplicationData {
 	private DocumentBuilder builder = null;
 	private Document document = null;
 	private String envType = null;
-	private static final Logger LOGGER = Logger
-			.getLogger(XmlApplicationData.class);
+	private static final Logger LOGGER = LogManager.getLogger(XmlApplicationData.class);
 	private static final Map<String, List<IProperty>> dataBucket = new HashMap<String, List<IProperty>>();
 	private static XmlApplicationData instance = null;
 

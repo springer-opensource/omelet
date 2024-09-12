@@ -2,14 +2,15 @@ package omelet.data;
 
 import java.util.concurrent.TimeUnit;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.google.common.base.Stopwatch;
 
 public class PrettyMessage implements Runnable {
 
 	private boolean keepRunning = true;
-	private static final Logger LOGGER = Logger.getLogger(PrettyMessage.class);
+	private static final Logger LOGGER = LogManager.getLogger(PrettyMessage.class);
 	
 	
 	public void swtichOffLogging(){
@@ -17,7 +18,7 @@ public class PrettyMessage implements Runnable {
 	}
 	@Override
 	public void run() {
-		Stopwatch sw = new Stopwatch();
+		Stopwatch sw = Stopwatch.createUnstarted();
 		sw.start();
 		LOGGER.info("Please wait while we are building your testData");
 		StringBuilder sb = new StringBuilder();
@@ -26,7 +27,7 @@ public class PrettyMessage implements Runnable {
 			LOGGER.info(sb.toString());
 			sleep(1);
 		}
-		LOGGER.info("Time taken to build data in seconds is:"+sw.elapsedTime(TimeUnit.SECONDS));
+		LOGGER.info("Time taken to build data in seconds is:"+sw.elapsed(TimeUnit.SECONDS));
 		sw.stop();
 		
 	}

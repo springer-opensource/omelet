@@ -6,6 +6,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.testng.IRetryAnalyzer;
+import org.testng.annotations.ITestAnnotation;
+import org.testng.internal.annotations.IDataProvidable;
+
 import omelet.common.Utils;
 import omelet.data.DataProvider.mapStrategy;
 import omelet.data.driverconf.IBrowserConf;
@@ -18,12 +25,6 @@ import omelet.data.xml.XmlApplicationData;
 import omelet.exception.FrameworkException;
 import omelet.testng.support.RetryAnalyzer;
 
-import org.apache.commons.lang3.StringUtils;
-import org.testng.IRetryAnalyzer;
-import org.testng.annotations.ITestAnnotation;
-import org.testng.internal.annotations.IDataProvidable;
-import org.testng.log4testng.Logger;
-
 public class MethodContext implements IMethodContext {
 
 	private String methodName;
@@ -35,7 +36,7 @@ public class MethodContext implements IMethodContext {
 	private boolean beforeMethod;
 	private boolean afterMethod;
 	private DataSource dataSource;
-	private Logger LOGGER = Logger.getLogger(MethodContext.class);
+	private static final Logger LOGGER = LogManager.getLogger(MethodContext.class);
 	private boolean isDataSourceCalculated = false;
 	private boolean isEnabled;
 	private String[] groups;

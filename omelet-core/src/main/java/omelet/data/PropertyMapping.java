@@ -22,15 +22,15 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-import omelet.exception.FrameworkException;
-
 import org.apache.commons.io.IOUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import omelet.exception.FrameworkException;
 
 /***
  * Load properties file
@@ -41,13 +41,12 @@ import org.apache.log4j.Logger;
 public class PropertyMapping implements IProperty {
 
 	private Properties prop = new Properties();
-	private Map<String, String> propertiesValue = Collections
-			.synchronizedMap(new HashMap<String, String>());
+	private Map<String, String> propertiesValue = Collections.synchronizedMap(new HashMap<String, String>());
 	private Set<String> classEnumCheck = new HashSet<String>();
 	private FileInputStream fis;
 	boolean isEnumMappingChecked;
-	private static final Logger LOGGER = Logger
-			.getLogger(PropertyMapping.class);
+	
+	private static final Logger LOGGER = LogManager.getLogger(PropertyMapping.class);
 
 	public PropertyMapping(Properties prop) {
 		this.prop = prop;
@@ -104,8 +103,7 @@ public class PropertyMapping implements IProperty {
 			return value;
 		} catch (NullPointerException e) {
 			LOGGER.error(e);
-			throw new FrameworkException("Value for key: " + key
-					+ " not specified in Data file");
+			throw new FrameworkException("Value for key: " + key + " not specified in Data file");
 		}
 	}
 
@@ -123,8 +121,7 @@ public class PropertyMapping implements IProperty {
 			return value;
 		} catch (NullPointerException e) {
 			LOGGER.error(e);
-			throw new FrameworkException("Value for key: " + key
-					+ " not specified in Data file");
+			throw new FrameworkException("Value for key: " + key + " not specified in Data file");
 		}
 	}
 
@@ -142,8 +139,7 @@ public class PropertyMapping implements IProperty {
 	}
 
 	/***
-	 * Compares the Enum with loaded properties file and prevents Null in Run
-	 * time
+	 * Compares the Enum with loaded properties file and prevents Null in Run time
 	 * 
 	 * @param key
 	 */
@@ -154,8 +150,7 @@ public class PropertyMapping implements IProperty {
 			Set<String> misMatchEnum = new HashSet<String>();
 			for (Enum<?> value : key.getClass().getEnumConstants()) {
 				if (propertiesValue.get(value.toString()) == null) {
-					misMatchEnum.add("Key with text=" + value.toString()
-							+ " in class=" + key.getClass().getName() + ""
+					misMatchEnum.add("Key with text=" + value.toString() + " in class=" + key.getClass().getName() + ""
 							+ " is not present in the loaded  file");
 				}
 			}
@@ -191,15 +186,15 @@ public class PropertyMapping implements IProperty {
 		StringBuilder newSb = new StringBuilder();
 		for (String key : propertiesValue.keySet()) {
 			newSb.append("<span style='font-weight:normal'>").append(key).append("</span>").append(" : ")
-				 .append("<span style='font-weight:bold'>").append(propertiesValue.get(key)).append("</span>")
-				 .append("<br>");
+					.append("<span style='font-weight:bold'>").append(propertiesValue.get(key)).append("</span>")
+					.append("<br>");
 		}
 		sb.append("<a id='showData").append(randomNum).append("' onclick='showDiv").append(randomNum)
-		  .append("()''>show test data</a>");
+				.append("()''>show test data</a>");
 		sb.append("<a id='hideData").append(randomNum).append("' style='display:none' onclick='hideDiv")
-		  .append(randomNum).append("()''>hide test data</a>");
+				.append(randomNum).append("()''>hide test data</a>");
 		sb.append("<div id='testData").append(randomNum).append("' style='display:none'>").append(newSb.toString())
-		  .append("</div>");
+				.append("</div>");
 		return sb.toString();
 	}
 }

@@ -1,11 +1,24 @@
 package omelet.data.xml;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import omelet.common.Utils;
 import omelet.data.IDataSource;
@@ -13,14 +26,6 @@ import omelet.data.IMappingData;
 import omelet.data.ImplementIMap;
 import omelet.data.PropertyValueMin;
 import omelet.driver.SuiteConfiguration;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 /**
  * Mapping.xml parser
@@ -33,8 +38,7 @@ public class MappingParserRevisit implements IDataSource {
 	private Document document = null;
 	private String xmlName;
 	private static final String DELIMITTER = ";";
-	private static final Logger LOGGER = Logger
-			.getLogger(MappingParserRevisit.class);
+	private static final Logger LOGGER = LogManager.getLogger(MappingParserRevisit.class);
 	private HashMap<String, IMappingData> bucket = new HashMap<String, IMappingData>();
 
 	public MappingParserRevisit() {

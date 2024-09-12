@@ -16,7 +16,8 @@
 package omelet.mail;
 
 import com.google.common.base.Stopwatch;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.testng.Reporter;
 
 import javax.mail.*;
@@ -44,7 +45,7 @@ public class Email implements IEmail {
 	private boolean sslEnabled;
 
 	private static final int maxcountEMailCheck = 10;
-	private static final Logger LOGGER = Logger.getLogger(Email.class);
+	private static final Logger LOGGER = LogManager.getLogger(Email.class);
 
 	private Email(Builder builder) {
 		MailProtocol protocol;
@@ -203,7 +204,7 @@ public class Email implements IEmail {
 	 * @return list of messages
 	 */
 	public List<Message> getEmailsBy(FilterEmails searchCat, String filterText) {
-		Stopwatch sw = new Stopwatch();
+		Stopwatch sw = Stopwatch.createUnstarted();
 		sw.start();
 
 		int inboxMessageCount = getMailCount();
@@ -230,7 +231,7 @@ public class Email implements IEmail {
 		}
 		sw.stop();
 		LOGGER.info("Time Taken by getMessage is: "
-							+ sw.elapsedTime(TimeUnit.SECONDS));
+							+ sw.elapsed(TimeUnit.SECONDS));
 		return returnMessages;
 	}
 

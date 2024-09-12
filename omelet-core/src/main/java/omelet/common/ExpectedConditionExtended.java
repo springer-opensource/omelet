@@ -21,7 +21,8 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.StaleElementReferenceException;
@@ -29,7 +30,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-
 /***
  * Class having function similar to {@link ExpectedConditions} Should be used in
  * DriverUtility.waitFor(). Assumption of the methods in this class is that they
@@ -42,7 +42,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
  */
 public class ExpectedConditionExtended {
 
-	private static final Logger LOGGER = Logger
+	private static final Logger LOGGER = LogManager
 			.getLogger(ExpectedConditionExtended.class);
 
 	/***

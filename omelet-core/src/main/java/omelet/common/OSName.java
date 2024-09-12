@@ -16,9 +16,11 @@
  *******************************************************************************/
 package omelet.common;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import omelet.exception.FrameworkException;
 
-import org.apache.log4j.Logger;
 
 /***
  * Return current Operating system
@@ -28,7 +30,7 @@ import org.apache.log4j.Logger;
  */
 public class OSName {
 
-	private static final Logger LOGGER = Logger.getLogger(OSName.class);
+	private static final Logger LOGGER = LogManager.getLogger(OSName.class);
 	private static String OS = System.getProperty("os.name").toLowerCase();
 
 	public enum OSN {

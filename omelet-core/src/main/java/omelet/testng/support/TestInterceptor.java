@@ -25,6 +25,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.testng.ITestContext;
 import org.testng.ITestListener;
 import org.testng.ITestResult;
@@ -40,8 +42,7 @@ import org.testng.Reporter;
  */
 public class TestInterceptor implements ITestListener {
 
-	private static final org.apache.log4j.Logger LOGGER = org.apache.log4j.Logger
-			.getLogger(TestInterceptor.class);
+	private static final Logger LOGGER = LogManager.getLogger(TestInterceptor.class);
 	private boolean LogToStandardOutput = true;
 	private static int count = 1;
 

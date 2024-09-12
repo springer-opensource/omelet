@@ -5,7 +5,8 @@ import java.util.Map;
 
 import omelet.exception.FrameworkException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * 
@@ -13,7 +14,7 @@ import org.apache.log4j.Logger;
  *
  */
 public class ValidateBrowserRules {
-	private static final Logger LOGGER = Logger.getLogger(ValidateBrowserRules.class);
+	private static final Logger LOGGER = LogManager.getLogger(ValidateBrowserRules.class);
 	
 	Map<String, String> refinedBrowserConf = new HashMap<String, String>();
 	StringBuilder exceptionMessage = new StringBuilder();

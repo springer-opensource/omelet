@@ -28,7 +28,8 @@ import omelet.data.driverconf.IBrowserConf;
 import omelet.exception.FrameworkException;
 import omelet.testng.support.MethodContextCollection;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /***
  * Data Provider class for the @Test Methods
@@ -42,14 +43,12 @@ public class DataProvider {
 		Full, Optimal
 	}
 
-	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(DataProvider.class);
-
+	private static final Logger Log = LogManager.getLogger(DataProvider.class);
 
 	/***
 	 *
 	 * @param m
-	 *  method
+	 *            method
 	 * @return list of objects
 	 */
 	@org.testng.annotations.DataProvider(name = "GoogleData", parallel = true)
@@ -61,26 +60,24 @@ public class DataProvider {
 	/***
 	 *
 	 * @param m
-	 *  method
+	 *            method
 	 * @return list of objects
 	 */
 	@org.testng.annotations.DataProvider(name = "XmlData", parallel = true)
 	public static Object[][] xmlDataProvider(Method m) {
 		String methodName = Utils.getFullMethodName(m);
+		Log.debug("method name is: " + methodName);
 		return getData(methodName);
 	}
-	
-	/*@org.testng.annotations.DataProvider(name = "XmlData", parallel = true)
-	public static Object[][] xmlDataProvider1(ITestContext testContext) {
-		String methodName = Utils.getFullMethodName(m);
-		return getData(methodName);
-	}*/
-	
 
-	public static List<IBrowserConf> filterSameBrowsers(
-			List<IBrowserConf> fullBrowserList) {
-		Set<IBrowserConf> browserConfSet = new HashSet<IBrowserConf>(
-				fullBrowserList);
+	/*
+	 * @org.testng.annotations.DataProvider(name = "XmlData", parallel = true)
+	 * public static Object[][] xmlDataProvider1(ITestContext testContext) { String
+	 * methodName = Utils.getFullMethodName(m); return getData(methodName); }
+	 */
+
+	public static List<IBrowserConf> filterSameBrowsers(List<IBrowserConf> fullBrowserList) {
+		Set<IBrowserConf> browserConfSet = new HashSet<IBrowserConf>(fullBrowserList);
 		return new ArrayList<IBrowserConf>(browserConfSet);
 	}
 
@@ -92,8 +89,8 @@ public class DataProvider {
 	 */
 	public static Object[][] getData(String methodName) {
 		Object[][] testMethodData = null;
-		List<IBrowserConf> browserConfFilteredList = filterSameBrowsers(MethodContextCollection.getMethodContext(methodName).
-				getBrowserConf());
+		List<IBrowserConf> browserConfFilteredList = filterSameBrowsers(
+				MethodContextCollection.getMethodContext(methodName).getBrowserConf());
 		List<IProperty> testMData = MethodContextCollection.getMethodContext(methodName).getMethodTestData();
 		mapStrategy strategy = MethodContextCollection.getMethodContext(methodName).getRunStrategy();
 		int browserConfCount = browserConfFilteredList.size();
@@ -116,8 +113,9 @@ public class DataProvider {
 			}
 			break;
 		case Optimal:
-			/*if(testDataCount <=0)
-				testDataCount = 1;*/
+			/*
+			 * if(testDataCount <=0) testDataCount = 1;
+			 */
 			if (browserConfCount >= testDataCount) {
 				loopCombination = browserConfCount;
 			} else {
@@ -128,14 +126,12 @@ public class DataProvider {
 				Random r = new Random();
 				// check whose value is greater and start the loop
 				if (i >= browserConfCount) {
-					testMethodData[i][0] = browserConfFilteredList.get(r
-							.nextInt(browserConfCount));
+					testMethodData[i][0] = browserConfFilteredList.get(r.nextInt(browserConfCount));
 				} else {
 					testMethodData[i][0] = browserConfFilteredList.get(i);
 				}
 				if (i >= testDataCount) {
-					testMethodData[i][1] = testMData.get(r
-							.nextInt(testDataCount));
+					testMethodData[i][1] = testMData.get(r.nextInt(testDataCount));
 				} else {
 					testMethodData[i][1] = testMData.get(i);
 				}
@@ -146,11 +142,12 @@ public class DataProvider {
 		}
 		return testMethodData;
 	}
-	
-	private static void verifyCount(int count,String dataName){
-		if(count <=0){
-			throw new FrameworkException("Data Provider of Type:"+dataName+"not present , there is some problem please check!");
+
+	private static void verifyCount(int count, String dataName) {
+		if (count <= 0) {
+			throw new FrameworkException(
+					"Data Provider of Type:" + dataName + "not present , there is some problem please check!");
 		}
 	}
-	
+
 }

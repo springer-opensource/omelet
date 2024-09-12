@@ -1,17 +1,17 @@
 package omelet.support.saucelabs;
 
-import omelet.driver.Driver;
-
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.IInvokedMethod;
 import org.testng.IInvokedMethodListener;
 import org.testng.ITestResult;
 import org.testng.Reporter;
 
+import omelet.driver.Driver;
+
 public class SauceLabsIntegration implements IInvokedMethodListener {
-	private static final Logger LOGGER = Logger
-			.getLogger(SauceLabsIntegration.class);
+	private static final Logger Log = LogManager.getLogger(SauceLabsIntegration.class);
 
 	@Override
 	public void afterInvocation(IInvokedMethod method, ITestResult testResult) {
@@ -19,20 +19,16 @@ public class SauceLabsIntegration implements IInvokedMethodListener {
 			// it will throw Null pointer exception for the method who are not
 			// omelet driven , should be fixed as using try catch is a temporary
 			// one!
-			if (Driver.getBrowserConf().host().contains("sauce")
-					&& Driver.getBrowserConf().isRemoteFlag()) {
+			if (Driver.getBrowserConf().host().contains("sauce") && Driver.getBrowserConf().isRemoteFlag()) {
 				RemoteWebDriver driver = (RemoteWebDriver) Driver.getDriver();
-				LOGGER.debug("After in SL Integration driver Session ID: "
-						+ driver.getSessionId());
+				Log.debug("After in SL Integration driver Session ID: " + driver.getSessionId());
 				WebInterface slWebInterface = new WebInterface();
-				slWebInterface.updateSauceLabsJob(driver.getSessionId()
-						.toString(), method.getTestMethod().getMethodName(),
-						method.getTestResult().isSuccess());
+				slWebInterface.updateSauceLabsJob(driver.getSessionId().toString(),
+						method.getTestMethod().getMethodName(), method.getTestResult().isSuccess());
 
 				Reporter.setCurrentTestResult(testResult);
 				Reporter.log("SauceLabs Report :: ");
-				Reporter.log(slWebInterface.generateLinkForJob(driver
-						.getSessionId().toString()));
+				Reporter.log(slWebInterface.generateLinkForJob(driver.getSessionId().toString()));
 				// Reporter.log(slWebInterface.generateLinkForEmbedScript(driver
 				// .getSessionId().toString(), true));
 				// Reporter.log("<br>");
@@ -42,7 +38,7 @@ public class SauceLabsIntegration implements IInvokedMethodListener {
 				Reporter.log("<br>");
 			}
 		} catch (Exception e) {
-			LOGGER.error("Not to interfere in the test result!, but needs to be taken care!");
+			Log.error("Not to interfere in the test result!, but needs to be taken care!");
 		}
 	}
 

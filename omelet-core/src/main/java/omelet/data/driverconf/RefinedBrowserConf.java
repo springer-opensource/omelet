@@ -7,12 +7,13 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.openqa.selenium.MutableCapabilities;
+
 import omelet.common.Utils;
 import omelet.data.PropertyValueMin;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
-import org.openqa.selenium.remote.DesiredCapabilities;
 
 /**
  * Refine Browser data based on the Hierarchy
@@ -26,7 +27,7 @@ public class RefinedBrowserConf {
 	private final Map<String, String> clientBrowserData;
 	private boolean isFrameworkProperties;
 	private PropertyValueMin frameworkPropData = null;
-	private static final Logger LOGGER = Logger.getLogger(RefinedBrowserConf.class);
+	private static final Logger LOGGER = LogManager.getLogger(RefinedBrowserConf.class);
 	private final String fileName;
 
 	public RefinedBrowserConf(Map<String, String> clientBrowserData,
@@ -67,8 +68,8 @@ public class RefinedBrowserConf {
 		return value;
 	}
 
-	public DesiredCapabilities getDesiredCapabilities() {
-		DesiredCapabilities dc = new DesiredCapabilities();
+	public MutableCapabilities getDesiredCapabilities() {
+		MutableCapabilities dc = new MutableCapabilities();
 		if(isFrameworkProperties){
 			dc.merge(getDCFrameworkProp());
 		}
@@ -77,7 +78,7 @@ public class RefinedBrowserConf {
 		return dc;
 	}
 	
-	private DesiredCapabilities getDCFrameworkProp(){
+	private MutableCapabilities getDCFrameworkProp(){
 		if(isFrameworkProperties){
 			if (isFrameworkProperties) {
 				Properties prop = new Properties();
@@ -99,13 +100,13 @@ public class RefinedBrowserConf {
 		return null;
 	}
 	
-	private DesiredCapabilities getDCJvm(){
+	private MutableCapabilities getDCJvm(){
 		PrepareDesiredCapability systemCapa = new PrepareDesiredCapability(
 				System.getProperties());
 		return systemCapa.get();
 	}
 	
-	private DesiredCapabilities getDCClient(){
+	private MutableCapabilities getDCClient(){
 		PrepareDesiredCapability clientBrowserCap = new PrepareDesiredCapability(
 				clientBrowserData);
 		return clientBrowserCap.get();

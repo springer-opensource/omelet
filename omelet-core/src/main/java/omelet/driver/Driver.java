@@ -20,7 +20,8 @@ package omelet.driver;
 import omelet.configuration.DefaultBrowserConf;
 import omelet.data.driverconf.IBrowserConf;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.WebDriver;
 
 /***
@@ -31,7 +32,7 @@ import org.openqa.selenium.WebDriver;
  */
 public class Driver {
 
-	private static final Logger LOGGER = Logger.getLogger(Driver.class);
+	private static final Logger LOGGER = LogManager.getLogger(Driver.class);
 	protected static InheritableThreadLocal<IBrowserConf> browserConf = new InheritableThreadLocal<IBrowserConf>();
 	protected static InheritableThreadLocal<WebDriver> driver = new InheritableThreadLocal<WebDriver>();
 

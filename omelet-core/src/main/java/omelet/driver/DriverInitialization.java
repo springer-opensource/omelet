@@ -28,7 +28,8 @@ import omelet.testng.support.HtmlTable;
 import omelet.testng.support.MethodContextCollection;
 import omelet.testng.support.SAssert;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.testng.IInvokedMethod;
 import org.testng.IInvokedMethodListener;
 import org.testng.ITestResult;
@@ -43,8 +44,7 @@ import org.testng.Reporter;
  */
 public class DriverInitialization implements IInvokedMethodListener {
 
-	private static final Logger LOGGER = Logger
-			.getLogger(DriverInitialization.class);
+	private static final Logger LOGGER = LogManager.getLogger(DriverInitialization.class);
 	// output dir of TestNg currently being used in SAssert
 	public static String outPutDir;
 
@@ -61,7 +61,7 @@ public class DriverInitialization implements IInvokedMethodListener {
 			outPutDir = testResult.getTestContext().getOutputDirectory();
 		}
 		if (method.getTestMethod().isBeforeMethodConfiguration()) {
-			LOGGER.info("Setting the WebDriver in Before Method");
+			LOGGER.debug("Setting the WebDriver in Before Method");
 			// Initializing browser so that will be same across all the child
 			// threads
 			Driver.browserConf.set(null);
@@ -175,7 +175,7 @@ public class DriverInitialization implements IInvokedMethodListener {
 					testResult.getName());
 			Reporter.log("Table Report is:::" + report.getTable());
 		} catch (Exception e) {
-			LOGGER.info("Catching exception in public HTML Method", e);
+			LOGGER.debug("Catching exception in public HTML Method", e);
 		}
 	}
 
@@ -215,7 +215,7 @@ public class DriverInitialization implements IInvokedMethodListener {
 				}
 			}
 		} catch (Exception e) {
-			LOGGER.info("Catching exception in add screen shot Method", e);
+			LOGGER.debug("Catching exception in add screen shot Method", e);
 		}
 	}
 }

@@ -3,19 +3,18 @@ package omelet.driver;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.MutableCapabilities;
 
 public class ConfigureDesiredCapability {
 	
-	DesiredCapabilities dc;
-	private static Map<String,DesiredCapabilities> lDesiredCapMap = new HashMap<String, DesiredCapabilities>();
+	private static Map<String,MutableCapabilities> lDesiredCapMap = new HashMap<String, MutableCapabilities>();
 	
 	
-	public static void load(Map<String,DesiredCapabilities> desiredCapMap){
+	public static void load(Map<String,MutableCapabilities> desiredCapMap){
 		lDesiredCapMap = desiredCapMap;
 	}
 	
-	protected static DesiredCapabilities getDesiredCapabilities(String browserName){
+	protected static MutableCapabilities getDesiredCapabilities(String browserName){
 		if(lDesiredCapMap.containsKey(browserName)){
 			return lDesiredCapMap.get(browserName);
 		}

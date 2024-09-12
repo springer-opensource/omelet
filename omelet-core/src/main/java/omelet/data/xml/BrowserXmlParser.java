@@ -26,18 +26,19 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import omelet.common.Utils;
-import omelet.data.IMappingData;
-import omelet.data.driverconf.IBrowserConf;
-import omelet.data.driverconf.PrepareDriverConf;
-
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+
+import omelet.common.Utils;
+import omelet.data.IMappingData;
+import omelet.data.driverconf.IBrowserConf;
+import omelet.data.driverconf.PrepareDriverConf;
 
 /***
  * Return list of {@link IBrowserConf} given name of Xml file
@@ -49,8 +50,7 @@ import org.xml.sax.SAXException;
 public class BrowserXmlParser {
 	private DocumentBuilder builder = null;
 	private Document document = null;
-	private static final Logger LOGGER = Logger
-			.getLogger(BrowserXmlParser.class);
+	private static final Logger LOGGER = LogManager.getLogger(BrowserXmlParser.class);
 	private static final Map<String,List<IBrowserConf>> xmlBrowserMap = new HashMap<String, List<IBrowserConf>>();
 	private static BrowserXmlParser instance = null;
 

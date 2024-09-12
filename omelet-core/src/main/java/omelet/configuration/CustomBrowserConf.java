@@ -16,11 +16,12 @@
  *******************************************************************************/
 package omelet.configuration;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import omelet.data.IProperty;
 import omelet.data.PropertyMapping;
 import omelet.data.driverconf.IBrowserConf;
-
-import org.apache.log4j.Logger;
 
 /***
  * Set Custom initialization of {@link IBrowserConf} using this class
@@ -29,8 +30,7 @@ import org.apache.log4j.Logger;
  * 
  */
 public class CustomBrowserConf {
-	private static final Logger LOGGER = Logger
-			.getLogger(CustomBrowserConf.class);
+	private static final Logger LOGGER = LogManager.getLogger(CustomBrowserConf.class);
 
 	protected static IProperty prop;
 
@@ -39,10 +39,10 @@ public class CustomBrowserConf {
 	}
 
 	/***
-	 * Load Custom Properties file and initialize {@link DefaultBrowserConf}
-	 * Param
+	 * Load Custom Properties file and initialize {@link DefaultBrowserConf} Param
 	 * 
-	 * @param filePath:Full qualified path
+	 * @param filePath:Full
+	 *            qualified path
 	 * 
 	 */
 	public static void loadPropFile(String filePath) {

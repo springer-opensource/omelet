@@ -21,13 +21,13 @@ public class BrowserConfigurationTest {
 	static final String BSKEY = "";
 	static final String BSURLS = "";
 	static final String DEVICE = "";
-	static final String BROWSERNAME = "FireFox";
+	static final String BROWSERNAME = "fireFox";
 	static final String BROWSERVERSION = "";
 	static final String OS = "";
 	static final String OSVERSION = "";
 	static final String PLATFORM = "";
 
-	static final String BROWSERNAMELOCAL = "FireFox";
+	static final String BROWSERNAMELOCAL = "fireFox";
 	static final String IEDRIVERPATH = System.getProperty("user.dir")+"/src/main/resources/IEDriverServer.exe".replace("/", File.separator);
 	static final String CHROMEDRIVERPATH = System.getProperty("user.dir")+"/src/main/resources/chromedriver".replace("/", File.separator);
 

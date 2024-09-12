@@ -22,7 +22,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -52,7 +53,7 @@ public class DriverUtility {
 		CHECK, UNCHECK
 	}
 
-	private static final Logger LOGGER = Logger.getLogger(DriverUtility.class);
+	private static final Logger LOGGER = LogManager.getLogger(DriverUtility.class);
 
 	/***
 	 * Generic waitFor Function which waits for condition to be successful else
@@ -66,37 +67,34 @@ public class DriverUtility {
 	 *            in seconds
 	 * @return T or null
 	 */
-	public static <T> T waitFor(ExpectedCondition<T> expectedCondition,
-			WebDriver driver, int timeOutInSeconds) {
-		Stopwatch stopwatch = new Stopwatch();
+	public static <T> T waitFor(ExpectedCondition<T> expectedCondition, WebDriver driver, int timeOutInSeconds) {
+		Stopwatch stopwatch = Stopwatch.createUnstarted();
 		stopwatch.start();
 		driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
 		try {
-			return new WebDriverWait(driver, timeOutInSeconds)
-					.pollingEvery(500, TimeUnit.MILLISECONDS).until(
-							expectedCondition);
+			return new WebDriverWait(driver, timeOutInSeconds).pollingEvery(500, TimeUnit.MILLISECONDS)
+					.until(expectedCondition);
 		} catch (TimeoutException e) {
 			LOGGER.error(e);
 			return null;
 		} finally {
-			driver.manage()
-					.timeouts()
-					.implicitlyWait(Driver.getBrowserConf().getDriverTimeOut(),
-							TimeUnit.SECONDS);
+			driver.manage().timeouts().implicitlyWait(Driver.getBrowserConf().getDriverTimeOut(), TimeUnit.SECONDS);
 			stopwatch.stop();
-			LOGGER.debug("Time Taken for waitFor method for Expected Condition is:"
-					+ stopwatch.elapsedTime(TimeUnit.SECONDS));
+			LOGGER.debug(
+					"Time Taken for waitFor method for Expected Condition is:" + stopwatch.elapsed(TimeUnit.SECONDS));
 		}
 	}
 
 	/***
 	 * Switching between windows.
 	 * 
+	 * @deprecated use {@link omelet.common.CommonHelper#switchToWindow(String)}
 	 * @param driver
 	 * @param sString
 	 *            :Target window Title
 	 * @return:True if window switched
 	 */
+	@Deprecated
 	public static boolean switchToWindow(WebDriver driver, String sString) {
 		String currentHandle = driver.getWindowHandle();
 		Set<String> handles = driver.getWindowHandles();
@@ -111,8 +109,7 @@ public class DriverUtility {
 			}
 			driver.switchTo().window(currentHandle);
 
-			LOGGER.info("Window with title:" + sString
-					+ " Not present,Not able to switch");
+			LOGGER.info("Window with title:" + sString + " Not present,Not able to switch");
 			return false;
 		} else {
 			LOGGER.info("There is only one window handle :" + currentHandle);
@@ -135,11 +132,9 @@ public class DriverUtility {
 			if (driver != null) {
 				if (Driver.getBrowserConf().isRemoteFlag()) {
 					Augmenter augumenter = new Augmenter();
-					scrFile = ((TakesScreenshot) augumenter.augment(driver))
-							.getScreenshotAs(OutputType.FILE);
+					scrFile = ((TakesScreenshot) augumenter.augment(driver)).getScreenshotAs(OutputType.FILE);
 				} else {
-					scrFile = ((TakesScreenshot) driver)
-							.getScreenshotAs(OutputType.FILE);
+					scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
 				}
 				FileUtils.moveFile(scrFile, saved);
 			} else {
@@ -154,6 +149,7 @@ public class DriverUtility {
 	/***
 	 * Double click on WebElement using JavaScript or Actions Class
 	 * 
+	 * @deprecated use {@link omelet.common.ElementActions#doubleClick(WebElement)}
 	 * @param element
 	 *            :Element on which Double click needs to be performed
 	 * @param clickStrategy
@@ -161,8 +157,8 @@ public class DriverUtility {
 	 * @param driver
 	 * @author kapilA
 	 */
-	public static void doubleClick(WebElement element, WebDriver driver,
-			CLICK_STRATEGY clickStrategy) {
+	@Deprecated
+	public static void doubleClick(WebElement element, WebDriver driver, CLICK_STRATEGY clickStrategy) {
 
 		switch (clickStrategy) {
 
@@ -171,12 +167,9 @@ public class DriverUtility {
 			action.doubleClick(element).perform();
 			break;
 		case USING_JS:
-			((JavascriptExecutor) driver)
-					.executeScript(
-							"var evt = document.createEvent('MouseEvents');"
-									+ "evt.initMouseEvent('dblclick',true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0,null);"
-									+ "arguments[0].dispatchEvent(evt);",
-							element);
+			((JavascriptExecutor) driver).executeScript("var evt = document.createEvent('MouseEvents');"
+					+ "evt.initMouseEvent('dblclick',true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0,null);"
+					+ "arguments[0].dispatchEvent(evt);", element);
 			break;
 		default:
 			String clickStrategyParameter;
@@ -185,8 +178,7 @@ public class DriverUtility {
 			} catch (Exception e) {
 				clickStrategyParameter = "null";
 			}
-			LOGGER.error("Parameter missmatch: Unknown click strategy. "
-					+ clickStrategyParameter);
+			LOGGER.error("Parameter missmatch: Unknown click strategy. " + clickStrategyParameter);
 		}
 	}
 
@@ -205,8 +197,7 @@ public class DriverUtility {
 	 *            :WebDriver
 	 * @author kapilA
 	 */
-	public static void dragAndDrop(WebElement sourceElement,
-			WebElement targetElement, WebDriver driver) {
+	public static void dragAndDrop(WebElement sourceElement, WebElement targetElement, WebDriver driver) {
 		Actions a = new Actions(driver);
 		a.dragAndDrop(sourceElement, targetElement).perform();
 	}
@@ -223,8 +214,7 @@ public class DriverUtility {
 	 *            :index to be selected by if value with string is not found
 	 * @author kapilA
 	 */
-	public static void selectDropDown(WebElement webElement,
-			String visibleText, Integer defaultIndex) {
+	public static void selectDropDown(WebElement webElement, String visibleText, Integer defaultIndex) {
 		checkArgument(visibleText != null && !visibleText.isEmpty(),
 				"Text Entered to method should not be null and not empty");
 		Select s = new Select(webElement);
@@ -235,31 +225,34 @@ public class DriverUtility {
 			s.selectByIndex(defaultIndex);
 		}
 	}
-	
+
 	/**
-	* select a drop down value by using partial text comparison
-	* @param element
-	* @param partialText
-	* @author nageshM
-	*
-	*/
+	 * select a drop down value by using partial text comparison
+	 * 
+	 * @param element
+	 * @param partialText
+	 * @author nageshM
+	 *
+	 */
 	public static void selectByPartialText(WebElement element, String partialText) {
 		List<WebElement> optionList = element.findElements(By.tagName("option"));
 		for (WebElement option : optionList) {
-			if (option.getText().toLowerCase().contains(partialText.toLowerCase())) 
+			if (option.getText().toLowerCase().contains(partialText.toLowerCase()))
 				option.click();
-				break;
+			break;
 		}
 	}
-	
+
 	/***
 	 * Accept Or Dismiss Window Alert
+	 * 
 	 * @param driver
 	 * @param acceptOrDismiss
 	 * 
 	 * @author nageshM
-	 */		
-	public static void acceptOrDismissAlert(WebDriver driver,String acceptOrDismiss) {
+	 */
+
+	public static void acceptOrDismissAlert(WebDriver driver, String acceptOrDismiss) {
 		Alert alert = driver.switchTo().alert();
 		if (acceptOrDismiss.toLowerCase().startsWith("a")) {
 			alert.accept();
@@ -267,18 +260,17 @@ public class DriverUtility {
 			alert.dismiss();
 		}
 	}
-	
+
 	/***
-	 * Forcefully check/uncheck checkbox irrespective of the state(Element
-	 * should be visible)
+	 * Forcefully check/uncheck checkbox irrespective of the state(Element should be
+	 * visible)
 	 * 
 	 * @param webElement
 	 *            :Check box element
 	 * @param checkUnCheck
 	 *            enum
 	 */
-	public static void checkUncheckCheckBox(WebElement webElement,
-			CHECK_UNCHECK checkUnCheck) {
+	public static void checkUncheckCheckBox(WebElement webElement, CHECK_UNCHECK checkUnCheck) {
 		boolean checked = webElement.isSelected();
 		if (checked) {
 			if (checkUnCheck.toString().equalsIgnoreCase("uncheck")) {

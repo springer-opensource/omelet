@@ -9,7 +9,8 @@ import omelet.data.DataProvider.mapStrategy;
 import omelet.exception.FrameworkException;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 /**
  * Refine data based on the hierarchy method -- Class -- Package
  * take {@link IDataSource} and return 
@@ -17,7 +18,7 @@ import org.apache.log4j.Logger;
  *
  */
 public class RefineMappedData {
-	private static final Logger LOGGER = Logger.getLogger(RefineMappedData.class);
+	private static final Logger LOGGER = LogManager.getLogger(RefineMappedData.class);
 			
 	private Map<String, IMappingData> primaryDataMap;
 

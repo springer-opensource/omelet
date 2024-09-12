@@ -27,11 +27,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import omelet.common.OSName;
 import omelet.common.OSName.OSN;
 import omelet.common.Utils;
-
-import org.apache.log4j.Logger;
 
 /**
  * For Setting and terminating BrowserStack Tunnel
@@ -44,8 +45,7 @@ public class BrowserStackTunnel {
 	private static Set<String> activeTunnels = Collections
 			.synchronizedSet(new HashSet<String>());
 	private static BrowserStackTunnel browserStackTunnel;
-	private static final Logger LOGGER = Logger
-			.getLogger(BrowserStackTunnel.class);
+	private static final Logger Log =LogManager.getLogger(BrowserStackTunnel.class);
 	private static OSN environment;
 	private Process tunnelProcess;
 	private InputStream is;
@@ -99,7 +99,7 @@ public class BrowserStackTunnel {
 		if (!activeTunnels.contains(browserStackKey)) {
 			synchronized (browserStackTunnel) {
 				if (!activeTunnels.contains(browserStackKey)) {
-					LOGGER.info("Starting tunnel for Key:" + browserStackKey);
+					Log.info("Starting tunnel for Key:" + browserStackKey);
 					pb = new ProcessBuilder();
 
 					pb.command(getSetUpCommand(browserStackKey,
@@ -109,17 +109,17 @@ public class BrowserStackTunnel {
 						waitforTunnelTobeUp("Press Ctrl-C to exit");
 						activeTunnels.add(browserStackKey);
 					} catch (IOException e) {
-						LOGGER.error(e);
+						Log.error(e);
 					} catch (InterruptedException e) {
-						LOGGER.error(e);
+						Log.error(e);
 					}
 				} else {
-					LOGGER.info("Tunnel Already exsist for they key:"
+					Log.info("Tunnel Already exsist for they key:"
 							+ browserStackKey);
 				}
 			}
 		} else {
-			LOGGER.info("Tunnel Already exsist for key:" + browserStackKey);
+			Log.info("Tunnel Already exsist for key:" + browserStackKey);
 		}
 	}
 
@@ -141,9 +141,9 @@ public class BrowserStackTunnel {
 				// if(t == null) {
 				// createTunnel(browserStackKey, browserStackURLS);
 				// }
-				LOGGER.info("cmd Output:" + t);
+				Log.info("cmd Output:" + t);
 			} catch (IOException e) {
-				LOGGER.error(e);
+				Log.error(e);
 			}
 		}
 	}
@@ -157,14 +157,14 @@ public class BrowserStackTunnel {
 		// Check if it is present in the Hash Set
 		// if not , remove from the set
 		if (isTunnelPresent(browserStackKey)) {
-			LOGGER.debug("Starting termination of Tunnel for key:"
+			Log.debug("Starting termination of Tunnel for key:"
 					+ browserStackKey);
 			KillTunnel kbs = this.new KillTunnel(browserStackKey);
 			kbs.kill();
-			LOGGER.info("Killing BrowserStack tunnel for Key:"
+			Log.info("Killing BrowserStack tunnel for Key:"
 					+ browserStackKey);
 		} else {
-			LOGGER.info("Tunnel Already Terminated for the key:"
+			Log.info("Tunnel Already Terminated for the key:"
 					+ browserStackKey);
 		}
 	}
@@ -268,10 +268,10 @@ public class BrowserStackTunnel {
 				killProcess = killpb.start();
 				killProcess.waitFor();
 			} catch (IOException e) {
-				LOGGER.error("Kill process for BrowserStack Tunnel having key: "
+				Log.error("Kill process for BrowserStack Tunnel having key: "
 						+ browserStackKey + " failed to start. " + e);
 			} catch (InterruptedException e) {
-				LOGGER.error("Kill process for BrowserStack Tunnel having key: "
+				Log.error("Kill process for BrowserStack Tunnel having key: "
 						+ browserStackKey + " failed to start. " + e);
 			} finally {
 				if (killProcess != null) {
