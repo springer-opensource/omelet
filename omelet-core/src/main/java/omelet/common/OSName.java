@@ -31,7 +31,7 @@ public class OSName {
 	private static final Logger LOGGER = Logger.getLogger(OSName.class);
 	private static String OS = System.getProperty("os.name").toLowerCase();
 
-	public static enum OSN {
+	public enum OSN {
 		WIN, UNIX, MAC
 	}
 

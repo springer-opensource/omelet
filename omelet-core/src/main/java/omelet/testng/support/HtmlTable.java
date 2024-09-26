@@ -47,10 +47,9 @@ public class HtmlTable {
 	 */
 	public String getTable() {
 		sb.append("<style type=\"text/css\">table{border-collapse: collapse;border: 1px solid black;color: #008000} table td{ border: 1px solid black;} table tr{ border: 1px solid black;}table th{border: 1px solid black;font-size:15px; font-weight: bold;color: #54B948;;background-color:#2F4F4F}</style>");
-		sb.append("<table >" + "<tr>" + "<th colspan='5'>" + testCaseName + "</th>"
-				+ "</tr>" + "<tr>" + "<th>Step No</th>"
-				+ "<th>Description</th>" + "<th>Status</th>"
-				+ "<th>Expected</th>" + "<th>Actual</th>");
+		sb.append("<table >" + "<tr>" + "<th colspan='5'>").append(testCaseName).append("</th>").append("</tr>")
+		  .append("<tr>").append("<th>Step No</th>").append("<th>Description</th>").append("<th>Status</th>")
+		  .append("<th>Expected</th>").append("<th>Actual</th>");
 		if (screenShotFlag) {
 			sb.append("<th>ScreenShot</th>");
 		}
@@ -61,20 +60,18 @@ public class HtmlTable {
 					.equals(assertM.getKey().getActual());
 			String printResult = (result) ? "Pass" : "Fail";
 			i++;
-			sb.append("<tr>" + "<td>" + i + "</td>" + "<td>"
-					+ assertM.getKey().getMessage() + "</td>");
+			sb.append("<tr>" + "<td>").append(i).append("</td>").append("<td>").append(assertM.getKey().getMessage())
+			  .append("</td>");
 			if (result) {
-				sb.append("<td style=\"color: #000080\">" + printResult
-						+ "</td>");
+				sb.append("<td style=\"color: #000080\">").append(printResult).append("</td>");
 			} else {
-				sb.append("<td style=\"color: #FF0000\">" + printResult
-						+ "</td>");
+				sb.append("<td style=\"color: #FF0000\">").append(printResult).append("</td>");
 			}
-			sb.append("<td>" + assertM.getKey().getExpected() + "</td>"
-					+ "<td>" + assertM.getKey().getActual() + "</td>");
+			sb.append("<td>").append(assertM.getKey().getExpected()).append("</td>").append("<td>")
+			  .append(assertM.getKey().getActual()).append("</td>");
 			if (!result && screenShotFlag) {
-				sb.append("<td>" + "<a href='" + assertM.getValue()
-						+ "' target='_blank'>screenShotLink</a>" + "</td>");
+				sb.append("<td>" + "<a href='").append(assertM.getValue())
+				  .append("' target='_blank'>screenShotLink</a>").append("</td>");
 			}
 			sb.append("</tr>");
 		}

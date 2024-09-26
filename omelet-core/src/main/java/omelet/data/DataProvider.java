@@ -38,25 +38,44 @@ import org.apache.log4j.Logger;
  */
 public class DataProvider {
 
-	public static enum mapStrategy {
+	public enum mapStrategy {
 		Full, Optimal
 	}
 
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = Logger.getLogger(DataProvider.class);
-	
 
+
+	/***
+	 *
+	 * @param m
+	 *  method
+	 * @return list of objects
+	 */
 	@org.testng.annotations.DataProvider(name = "GoogleData", parallel = true)
 	public static Object[][] googleSheetDataProvider(Method m) {
 		String testMethodName = Utils.getFullMethodName(m);
 		return getData(testMethodName);
 	}
 
+	/***
+	 *
+	 * @param m
+	 *  method
+	 * @return list of objects
+	 */
 	@org.testng.annotations.DataProvider(name = "XmlData", parallel = true)
 	public static Object[][] xmlDataProvider(Method m) {
 		String methodName = Utils.getFullMethodName(m);
 		return getData(methodName);
 	}
+	
+	/*@org.testng.annotations.DataProvider(name = "XmlData", parallel = true)
+	public static Object[][] xmlDataProvider1(ITestContext testContext) {
+		String methodName = Utils.getFullMethodName(m);
+		return getData(methodName);
+	}*/
+	
 
 	public static List<IBrowserConf> filterSameBrowsers(
 			List<IBrowserConf> fullBrowserList) {

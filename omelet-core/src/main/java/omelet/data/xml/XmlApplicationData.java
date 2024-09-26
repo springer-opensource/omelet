@@ -47,8 +47,6 @@ import org.xml.sax.SAXException;
  */
 public class XmlApplicationData {
 
-	private DocumentBuilderFactory factory = DocumentBuilderFactory
-			.newInstance();
 	private DocumentBuilder builder = null;
 	private Document document = null;
 	private String envType = null;
@@ -59,6 +57,8 @@ public class XmlApplicationData {
 
 	private XmlApplicationData() {
 		try {
+			DocumentBuilderFactory factory = DocumentBuilderFactory
+					.newInstance();
 			builder = factory.newDocumentBuilder();
 		} catch (ParserConfigurationException e) {
 			// TODO Auto-generated catch block
@@ -132,7 +132,7 @@ public class XmlApplicationData {
 			return dataBucket.get(xmlName);
 		} else {
 			List<IProperty> dataProperty = new ArrayList<IProperty>();
-			HashMap<String, String> keyValue = null;
+			HashMap<String, String> keyValue;
 			for (Element dataObject : getDataObjects(xmlName)) {
 				keyValue = new HashMap<String, String>();
 				NodeList pagesOject = dataObject.getElementsByTagName("Pages")

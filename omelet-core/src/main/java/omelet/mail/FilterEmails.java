@@ -17,5 +17,5 @@
 package omelet.mail;
 
 public enum FilterEmails {
-	TO, FROM
+	TO, FROM, SUBJECT
 }

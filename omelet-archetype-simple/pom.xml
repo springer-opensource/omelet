@@ -5,7 +5,7 @@
 
 	<groupId>com.springer</groupId>
 	<artifactId>omelet-archetype</artifactId>
-	<version>1.0.10</version>
+	<version>1.0.12</version>
 	<packaging>maven-archetype</packaging>
 	<description>static file generator for omelet</description>
 	<name>archeType for omelet</name>
@@ -33,7 +33,7 @@
 			</plugins>
 		</pluginManagement>
 	</build>
-	<url>https://github.com/springer-opensource/omelet/omelet-integration-tests</url>
+	<url>https://github.com/springernature/omelet/omelet-integration-tests</url>
 
 	<developers>
 		<developer>
@@ -57,8 +57,8 @@
 	</licenses>
 
 	<scm>
-		<connection>scm:git:ttps://github.com/springer-opensource/omelet.git/omelet-integration-tests</connection>
-		<url>https://github.com/springer-opensource/omelet.git/omelet-integration-tests</url>
+		<connection>scm:git:https://github.com/springernature/omelet.git/omelet-integration-tests</connection>
+		<url>https://github.com/springernature/omelet.git/omelet-integration-tests</url>
 	</scm>
 
 	<distributionManagement>
@@ -74,12 +74,6 @@
 	<profiles>
 		<profile>
 			<id>release-sign-artifacts</id>
-			<activation>
-				<property>
-					<name>performRelease</name>
-					<value>true</value>
-				</property>
-			</activation>
 			<build>
 				<plugins>
 					<plugin>

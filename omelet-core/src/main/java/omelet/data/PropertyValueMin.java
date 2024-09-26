@@ -95,8 +95,7 @@ public class PropertyValueMin {
 	 * constructor of the class
 	 */
 	public String getValue(String key) {
-		String value = propertiesValue.get(key);
-		return value;
+		return propertiesValue.get(key);
 
 	}
 
@@ -107,9 +106,8 @@ public class PropertyValueMin {
 	 */
 	private void createHashMap(Properties prop) {
 		String key;
-		Iterator<Object> i = prop.keySet().iterator();
-		while (i.hasNext()) {
-			key = (String) i.next();
+		for (Object o : prop.keySet()) {
+			key = (String) o;
 			propertiesValue.put(key, prop.getProperty(key));
 		}
 	}
@@ -124,11 +122,10 @@ public class PropertyValueMin {
 
 		StringBuilder newSb = new StringBuilder();
 		for (String key : propertiesValue.keySet()) {
-			newSb.append(key + ":" + propertiesValue.get(key) + "<br>");
+			newSb.append(key).append(":").append(propertiesValue.get(key)).append("<br>");
 		}
-		sb.append("<a href='Data' onmouseover=\"javascript:change('"
-				+ newSb.toString()
-				+ "')\" onmouseout=\"javascript:change('')\">Data</a>");
+		sb.append("<a href='Data' onmouseover=\"javascript:change('").append(newSb.toString())
+		  .append("')\" onmouseout=\"javascript:change('')\">Data</a>");
 		sb.append("<div id='testData'></div>");
 		return sb.toString();
 	}

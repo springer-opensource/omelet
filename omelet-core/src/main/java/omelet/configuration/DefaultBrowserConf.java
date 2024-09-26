@@ -49,8 +49,6 @@ public class DefaultBrowserConf {
 	/***
 	 * Return {@link IBrowserConf} depending on if {@link CustomBrowserConf} is
 	 * used or Default values set configured
-	 * 
-	 * @param browserConf
 	 */
 	public static IBrowserConf get() {
 		// TODO: this browserConf is set once in complete execution , which
@@ -76,8 +74,6 @@ public class DefaultBrowserConf {
 	/****
 	 * Check if custom properties file present or not if, present initialize
 	 * customProp to prop file
-	 * 
-	 * @return: true or false
 	 */
 	protected static void loadCustomPropertiesFile(IProperty prop) {
 		// Delete the browserConf

@@ -92,7 +92,7 @@
         dc.browserversion="32"
     	remoteflag = "false"
     	host = ""
-    	chromeserverpath="testpath"
+    	chromedriverpath="testpath"
     	username = "testusername1"
     	key = "testkey1"
         dc.name="iPad 4"/>

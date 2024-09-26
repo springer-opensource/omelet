@@ -16,6 +16,11 @@
  *******************************************************************************/
 package omelet.data;
 
+import java.io.File;
+
+import omelet.common.OSName;
+import omelet.common.OSName.OSN;
+
 /***
  * Keys which can be set from CommandLine , in any property file ,XML etc
  * 
@@ -23,11 +28,11 @@ package omelet.data;
  * 
  */
 public class DriverConfigurations {
-	
+
 	/**
 	 * 
 	 * @author borz01
-	 *
+	 * 
 	 */
 	public enum FrameworkConfig {
 		remoteflag("false"), drivertimeOut("30"), retryfailedtestcase("0"), highlightelementflag(
@@ -47,12 +52,14 @@ public class DriverConfigurations {
 	/**
 	 * 
 	 * @author borz01
-	 *
+	 * 
 	 */
 	public enum CloudConfig {
-		/*device(""), browserVersion(""), os(""), osVersion(
-				""), bsSwitch("false"), , bs_localTesting(
-				"false"), bs_urls(""), platform(""), mobileTest("false");*/
+		/*
+		 * device(""), browserVersion(""), os(""), osVersion( ""),
+		 * bsSwitch("false"), , bs_localTesting( "false"), bs_urls(""),
+		 * platform(""), mobileTest("false");
+		 */
 		username(""), key("");
 		private String defaultValue;
 
@@ -68,14 +75,53 @@ public class DriverConfigurations {
 	/**
 	 * 
 	 * @author borz01
-	 *
+	 * 
 	 */
 	public enum LocalEnvironmentConfig {
-		browsername("FireFox"), ieserverpath(""), chromeserverpath("");
+
+		browsername("FireFox"), iedriverpath(System.getProperty("user.dir")
+				+ "/src/main/resources/IEDriverServer.exe".replace("/",
+						File.separator)), chromedriverpath(System
+				.getProperty("user.dir")
+				+ "/src/main/resources/chromedriver".replace("/",
+						File.separator)), phantomdriverpath(System
+								.getProperty("user.dir")
+								+ "/src/main/resources/phantomjs".replace("/",
+										File.separator)),firefoxdriverpath(System
+				.getProperty("user.dir")
+				+ "/src/main/resources/geckodriver".replace("/",
+				File.separator));
+
 		private String defaultValue;
 
 		LocalEnvironmentConfig(String defaultValue) {
-			this.defaultValue = defaultValue;
+			if (defaultValue.contains("chromedriver")) {
+				if (OSName.get().equals(OSN.WIN)) {
+					this.defaultValue = defaultValue.replace("chromedriver",
+							"chromedriver.exe");
+				} else {
+					this.defaultValue = defaultValue;
+				}
+			}
+			else if (defaultValue.contains("firefox")) {
+				if (OSName.get().equals(OSN.WIN)) {
+					this.defaultValue = defaultValue.replace("geckodriver",
+							"geckodriver.exe");
+				} else {
+					this.defaultValue = defaultValue;
+				}
+			}
+			else if (defaultValue.contains("phantomjs")) {
+				if (OSName.get().equals(OSN.WIN)) {
+					this.defaultValue = defaultValue.replace("phantomjs",
+							"phantomjs.exe");
+				} else {
+					this.defaultValue = defaultValue;
+				}
+			} else {
+				this.defaultValue = defaultValue;
+			}
+			
 		}
 
 		public String get() {
@@ -87,10 +133,10 @@ public class DriverConfigurations {
 	/**
 	 * 
 	 * @author borz01
-	 *
+	 * 
 	 */
 	public enum HubConfig {
-		host("localhost"),port("4444");
+		host("localhost"), port("4444");
 		private String defaultValue;
 
 		HubConfig(String defaultValue) {

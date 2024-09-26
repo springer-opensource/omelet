@@ -6,6 +6,7 @@
 			<package name="omelet.test.data" />
 			<package name="omelet.test.libraries" />
 			<!-- <package name="framework.integration.test" /> -->
+			<package name="omelet.test.mail"></package>
 		</packages>
 	</test>
 </suite> 

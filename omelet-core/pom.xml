@@ -4,10 +4,10 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.springer</groupId>
 	<artifactId>omelet</artifactId>
-	<version>1.0.11</version>
+	<version>1.0.16</version>
 	<packaging>jar</packaging>
 	<name>omelet</name>
-	<url>https://github.com/springer-opensource/omelet</url>
+	<url>https://github.com/springernature/omelet</url>
 	<description>Automation library for Selenium built on top of TestNg</description>
 
 	<licenses>
@@ -34,15 +34,15 @@
 		</developer>
 	</developers>
 	<scm>
-		<url>https://github.com/springer-opensource/omelet.git</url>
-		<connection>scm:git:ttps://github.com/springer-opensource/omelet.git</connection>
+		<url>https://github.com/springernature/omelet.git</url>
+		<connection>scm:git:https://github.com/springernature/omelet.git</connection>
 		<tag>HEAD</tag>
 	</scm>
 	<dependencies>
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-server</artifactId>
-			<version>2.46.0</version>
+			<version>2.52.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.testng</groupId>
@@ -90,8 +90,38 @@
 			<artifactId>core</artifactId>
 			<version>1.47.1</version>
 		</dependency>
-
-
+		<dependency>
+			<groupId>org.testng</groupId>
+			<artifactId>testng</artifactId>
+			<version>6.9.4</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.codeborne</groupId>
+			<artifactId>phantomjsdriver</artifactId>
+			<version>1.3.0</version>
+			<scope>compile</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>org.seleniumhq.selenium</groupId>
+					<artifactId>selenium-java</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.seleniumhq.selenium</groupId>
+					<artifactId>selenium-remote-driver</artifactId>
+				</exclusion>
+			</exclusions>
+	</dependency>
+		<dependency>
+			<groupId>com.google.api-client</groupId>
+			<artifactId>google-api-client</artifactId>
+			<version>1.23.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.apis</groupId>
+			<artifactId>google-api-services-sheets</artifactId>
+			<version>v4-rev468-1.22.0</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
@@ -162,12 +192,6 @@
 	<profiles>
 		<profile>
 			<id>release-sign-artifacts</id>
-			<activation>
-				<property>
-					<name>performRelease</name>
-					<value>true</value>
-				</property>
-			</activation>
 			<build>
 				<plugins>
 					<plugin>

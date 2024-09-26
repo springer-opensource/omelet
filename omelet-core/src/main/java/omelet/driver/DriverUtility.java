@@ -18,10 +18,13 @@
 package omelet.driver;
 
 import java.io.File;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
+import org.openqa.selenium.Alert;
+import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.OutputType;
@@ -56,12 +59,12 @@ public class DriverUtility {
 	 * return null
 	 * 
 	 * @param expectedCondition
-	 *            :ExpectedCondition<T>
+	 *            :ExpectedCondition
 	 * @param driver
 	 *            :WebDriver
-	 * @param timeout
+	 * @param timeOutInSeconds
 	 *            in seconds
-	 * @return <T> or null
+	 * @return T or null
 	 */
 	public static <T> T waitFor(ExpectedCondition<T> expectedCondition,
 			WebDriver driver, int timeOutInSeconds) {
@@ -69,10 +72,9 @@ public class DriverUtility {
 		stopwatch.start();
 		driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
 		try {
-			T returnValue = new WebDriverWait(driver, timeOutInSeconds)
+			return new WebDriverWait(driver, timeOutInSeconds)
 					.pollingEvery(500, TimeUnit.MILLISECONDS).until(
 							expectedCondition);
-			return returnValue;
 		} catch (TimeoutException e) {
 			LOGGER.error(e);
 			return null;
@@ -177,7 +179,7 @@ public class DriverUtility {
 							element);
 			break;
 		default:
-			String clickStrategyParameter = "";
+			String clickStrategyParameter;
 			try {
 				clickStrategyParameter = clickStrategy.toString();
 			} catch (Exception e) {
@@ -233,14 +235,46 @@ public class DriverUtility {
 			s.selectByIndex(defaultIndex);
 		}
 	}
-
+	
+	/**
+	* select a drop down value by using partial text comparison
+	* @param element
+	* @param partialText
+	* @author nageshM
+	*
+	*/
+	public static void selectByPartialText(WebElement element, String partialText) {
+		List<WebElement> optionList = element.findElements(By.tagName("option"));
+		for (WebElement option : optionList) {
+			if (option.getText().toLowerCase().contains(partialText.toLowerCase())) 
+				option.click();
+				break;
+		}
+	}
+	
+	/***
+	 * Accept Or Dismiss Window Alert
+	 * @param driver
+	 * @param acceptOrDismiss
+	 * 
+	 * @author nageshM
+	 */		
+	public static void acceptOrDismissAlert(WebDriver driver,String acceptOrDismiss) {
+		Alert alert = driver.switchTo().alert();
+		if (acceptOrDismiss.toLowerCase().startsWith("a")) {
+			alert.accept();
+		} else if (acceptOrDismiss.toLowerCase().startsWith("d")) {
+			alert.dismiss();
+		}
+	}
+	
 	/***
 	 * Forcefully check/uncheck checkbox irrespective of the state(Element
 	 * should be visible)
 	 * 
 	 * @param webElement
 	 *            :Check box element
-	 * @param CHECK_UNCHECK
+	 * @param checkUnCheck
 	 *            enum
 	 */
 	public static void checkUncheckCheckBox(WebElement webElement,

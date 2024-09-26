@@ -135,9 +135,8 @@ public class PropertyMapping implements IProperty {
 	 */
 	private void createHashMap(Properties prop) {
 		String key;
-		Iterator<Object> i = prop.keySet().iterator();
-		while (i.hasNext()) {
-			key = (String) i.next();
+		for (Object o : prop.keySet()) {
+			key = (String) o;
 			propertiesValue.put(key, prop.getProperty(key));
 		}
 	}
@@ -162,9 +161,8 @@ public class PropertyMapping implements IProperty {
 			}
 			if (!misMatchEnum.isEmpty()) {
 				StringBuilder sb = new StringBuilder();
-				Iterator<String> mmI = misMatchEnum.iterator();
-				while (mmI.hasNext()) {
-					sb.append(mmI.next());
+				for (String aMisMatchEnum : misMatchEnum) {
+					sb.append(aMisMatchEnum);
 					sb.append(lineSeprator);
 				}
 				throw new FrameworkException(sb.toString());
@@ -179,36 +177,29 @@ public class PropertyMapping implements IProperty {
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("<script language='JavaScript'>");
-		sb.append("function showDiv" + randomNum + "() {");
-		sb.append("document.getElementById('testData" + randomNum
-				+ "').style.display = 'block';");
-		sb.append("document.getElementById('showData" + randomNum
-				+ "').style.display = 'none';");
-		sb.append("document.getElementById('hideData" + randomNum
-				+ "').style.display = 'block';}");
-		sb.append("function hideDiv" + randomNum + "() {");
-		sb.append("document.getElementById('testData" + randomNum
-				+ "').style.display = 'none';");
-		sb.append("document.getElementById('showData" + randomNum
-				+ "').style.display = 'block';");
-		sb.append("document.getElementById('hideData" + randomNum
-				+ "').style.display = 'none';}");
+		sb.append("function showDiv").append(randomNum).append("() {");
+		sb.append("document.getElementById('testData").append(randomNum).append("').style.display = 'block';");
+		sb.append("document.getElementById('showData").append(randomNum).append("').style.display = 'none';");
+		sb.append("document.getElementById('hideData").append(randomNum).append("').style.display = 'block';}");
+		sb.append("function hideDiv").append(randomNum).append("() {");
+		sb.append("document.getElementById('testData").append(randomNum).append("').style.display = 'none';");
+		sb.append("document.getElementById('showData").append(randomNum).append("').style.display = 'block';");
+		sb.append("document.getElementById('hideData").append(randomNum).append("').style.display = 'none';}");
 		sb.append("</script>");
 		sb.append("<br>");
 
 		StringBuilder newSb = new StringBuilder();
 		for (String key : propertiesValue.keySet()) {
-			newSb.append("<span style='font-weight:normal'>" + key + "</span>"
-					+ " : " + "<span style='font-weight:bold'>"
-					+ propertiesValue.get(key) + "</span>" + "<br>");
+			newSb.append("<span style='font-weight:normal'>").append(key).append("</span>").append(" : ")
+				 .append("<span style='font-weight:bold'>").append(propertiesValue.get(key)).append("</span>")
+				 .append("<br>");
 		}
-		sb.append("<a id='showData" + randomNum + "' onclick='showDiv"
-				+ randomNum + "()''>show test data</a>");
-		sb.append("<a id='hideData" + randomNum
-				+ "' style='display:none' onclick='hideDiv" + randomNum
-				+ "()''>hide test data</a>");
-		sb.append("<div id='testData" + randomNum + "' style='display:none'>"
-				+ newSb.toString() + "</div>");
+		sb.append("<a id='showData").append(randomNum).append("' onclick='showDiv").append(randomNum)
+		  .append("()''>show test data</a>");
+		sb.append("<a id='hideData").append(randomNum).append("' style='display:none' onclick='hideDiv")
+		  .append(randomNum).append("()''>hide test data</a>");
+		sb.append("<div id='testData").append(randomNum).append("' style='display:none'>").append(newSb.toString())
+		  .append("</div>");
 		return sb.toString();
 	}
 }

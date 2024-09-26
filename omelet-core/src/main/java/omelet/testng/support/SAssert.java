@@ -57,7 +57,7 @@ public class SAssert extends Assertion {
 			assertObj.doAssert();
 			assertMap.get().put(assertObj, "");
 		} catch (AssertionError ex) {
-			String screenShotPath = "";
+			String screenShotPath;
 			String screenShotName = "";
 			if (Driver.getBrowserConf().isScreenShotFlag()) {
 				screenShotName = UUID.randomUUID().toString();

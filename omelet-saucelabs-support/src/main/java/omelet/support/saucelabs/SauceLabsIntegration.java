@@ -3,7 +3,6 @@ package omelet.support.saucelabs;
 import omelet.driver.Driver;
 
 import org.apache.log4j.Logger;
-import org.hamcrest.core.IsInstanceOf;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.IInvokedMethod;
 import org.testng.IInvokedMethodListener;

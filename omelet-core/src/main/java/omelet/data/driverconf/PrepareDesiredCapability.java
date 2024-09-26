@@ -9,6 +9,7 @@ import java.util.Properties;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
+@SuppressWarnings("WhileLoopReplaceableByForEach")
 public class PrepareDesiredCapability {
 
 	private DesiredCapabilities dc = new DesiredCapabilities();
@@ -38,11 +39,9 @@ public class PrepareDesiredCapability {
 	 * @return
 	 */
 	public DesiredCapabilities get() {
-		Iterator<String> keys = initialDesiredCap.keySet().iterator();
-		while (keys.hasNext()) {
-			String key = (String) keys.next();
+		for (String key : initialDesiredCap.keySet()) {
 			KeyValueHolder kv = getKey(key);
-			if (kv != null &&StringUtils.isNotBlank(kv.value)) {
+			if (kv != null && StringUtils.isNotBlank(kv.value)) {
 				dc.setCapability(kv.key, kv.value);
 			}
 		}

@@ -1,10 +1,7 @@
 package omelet.data.xml;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -33,9 +30,6 @@ import org.xml.sax.SAXException;
  */
 public class MappingParserRevisit implements IDataSource {
 
-	private final DocumentBuilderFactory factory = DocumentBuilderFactory
-			.newInstance();
-	private DocumentBuilder builder = null;
 	private Document document = null;
 	private String xmlName;
 	private static final String DELIMITTER = ";";
@@ -45,7 +39,9 @@ public class MappingParserRevisit implements IDataSource {
 
 	public MappingParserRevisit() {
 		try {
-			builder = factory.newDocumentBuilder();
+			DocumentBuilderFactory factory = DocumentBuilderFactory
+					.newInstance();
+			DocumentBuilder builder = factory.newDocumentBuilder();
 			document = builder
 					.parse(Utils.getResources(this, getMappingFile()));
 		} catch (ParserConfigurationException e) {
@@ -128,9 +124,7 @@ public class MappingParserRevisit implements IDataSource {
 		if (StringUtils.isNotBlank(commaSepratedList)) {
 			if (commaSepratedList.contains(DELIMITTER)) {
 				String array[] = commaSepratedList.split(";");
-				for (int i = 0; i < array.length; i++) {
-					returnedList.add(array[i]);
-				}
+				Collections.addAll(returnedList, array);
 			} else {
 				returnedList.add(commaSepratedList);
 			}
@@ -166,7 +160,7 @@ public class MappingParserRevisit implements IDataSource {
 	}
 
 	private static String getFrameworkPropertyValue(String key) {
-		PropertyValueMin prop = null;
+		PropertyValueMin prop;
 		if (isFrameworkProperties()) {
 			prop = new PropertyValueMin(Utils.getResources(
 					MappingParserRevisit.class, "Framework.properties"));
@@ -177,11 +171,8 @@ public class MappingParserRevisit implements IDataSource {
 	}
 
 	private static boolean isFrameworkProperties() {
-		if (Utils.getResources(MappingParserRevisit.class,
-				"Framework.properties") != null) {
-			return true;
-		}
-		return false;
+		return Utils.getResources(MappingParserRevisit.class,
+								  "Framework.properties") != null;
 	}
 
 	@Override

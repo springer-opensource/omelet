@@ -95,10 +95,12 @@ public class Driver {
 	/***
 	 * This method checks if driver present yes then quit else ignore
 	 */
-	protected static void tearDown() {
+	public static void tearDown() {
 		if (driver.get() != null) {
 			driver.get().quit();
-			driver.remove();
+		}
+		if(null != browserConf.get()){
+			browserConf.set(null);
 		}
 	}
 

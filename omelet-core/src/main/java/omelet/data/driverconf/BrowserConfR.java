@@ -84,13 +84,25 @@ public class BrowserConfR implements IBrowserConf {
 
 	public String getLocalIEServerPath() {
 		return mappedValues
-				.get(DriverConfigurations.LocalEnvironmentConfig.ieserverpath
+				.get(DriverConfigurations.LocalEnvironmentConfig.iedriverpath
 						.toString());
 	}
 
 	public String getLocalChromeServerPath() {
 		return mappedValues
-				.get(DriverConfigurations.LocalEnvironmentConfig.chromeserverpath
+				.get(DriverConfigurations.LocalEnvironmentConfig.chromedriverpath
+						.toString());
+	}
+	
+	
+	public String getLocalPhantomServerPath() {
+		return  mappedValues
+				.get(DriverConfigurations.LocalEnvironmentConfig.phantomdriverpath
+						.toString());
+	}
+	public String getLocalFirefoxServerPath() {
+		return  mappedValues
+				.get(DriverConfigurations.LocalEnvironmentConfig.firefoxdriverpath
 						.toString());
 	}
 
@@ -114,11 +126,9 @@ public class BrowserConfR implements IBrowserConf {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("Browser:" + "<span style='font-weight:normal'>"
-				+ getBrowser() + "</span>");
-		sb.append(", Capabilities:"
-				+ "<span style='font-weight:normal'>"
-				+ this.getCapabilities().toString() + "</span>");
+		sb.append("Browser:" + "<span style='font-weight:normal'>").append(getBrowser()).append("</span>");
+		sb.append(", Capabilities:" + "<span style='font-weight:normal'>").append(this.getCapabilities().toString())
+		  .append("</span>");
 	/*	if (isRemoteFlag()) {
 			if (isBrowserStackSwitch()) {
 				sb.append(",BrowserVersion:"
@@ -152,7 +162,7 @@ public class BrowserConfR implements IBrowserConf {
 	public int hashCode() {
 		int hash = 7;
 
-		if (this.isRemoteFlag() == true) {
+		if (this.isRemoteFlag()) {
 			
 				hash = 31 * hash + this.getBrowser().hashCode();
 				hash = 31 * hash + this.getCapabilities().hashCode();
@@ -174,22 +184,11 @@ public class BrowserConfR implements IBrowserConf {
 		}
 		BrowserConfR secondObj = (BrowserConfR)obj;
 		if(this.isRemoteFlag() == secondObj.isRemoteFlag()){
-			if(this.isRemoteFlag() == true){
-				if(this.getBrowser().equals(secondObj.getBrowser())){
-					if(this.getCapabilities().equals(secondObj.getCapabilities())){
-						return true;
-					}else{
-						return false;
-					}
-				}else{
-					return false;
-				}
+			if(this.isRemoteFlag()) {
+				return this.getBrowser().equals(secondObj.getBrowser()) &&
+						this.getCapabilities().equals(secondObj.getCapabilities());
 			}else{
-				if(this.getBrowser().equals(secondObj.getBrowser())){
-					return true;
-				}else{
-					return false;
-				}
+				return this.getBrowser().equals(secondObj.getBrowser());
 			}
 		}
 		return false;
@@ -220,5 +219,7 @@ public class BrowserConfR implements IBrowserConf {
 	public void updateCapabilities(DesiredCapabilities dc) {
 		this.dc.merge(dc);
 	}
+
+
 
 }

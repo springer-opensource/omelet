@@ -1,100 +1,124 @@
 /*******************************************************************************
- *
- * 	Copyright 2014 Springer Science+Business Media Deutschland GmbH
- * 	
- * 	Licensed under the Apache License, Version 2.0 (the "License");
- * 	you may not use this file except in compliance with the License.
- * 	You may obtain a copy of the License at
- * 	
- * 	    http://www.apache.org/licenses/LICENSE-2.0
- * 	
- * 	Unless required by applicable law or agreed to in writing, software
- * 	distributed under the License is distributed on an "AS IS" BASIS,
- * 	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * 	See the License for the specific language governing permissions and
- * 	limitations under the License.
+ * Copyright 2014 Springer Science+Business Media Deutschland GmbH
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  *******************************************************************************/
 package omelet.mail;
 
-import java.io.BufferedReader;
+import com.google.common.base.Stopwatch;
+import org.apache.log4j.Logger;
+import org.testng.Reporter;
+
+import javax.mail.*;
+import javax.mail.Message.RecipientType;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
-import javax.mail.Address;
-import javax.mail.Folder;
-import javax.mail.Message;
-import javax.mail.Message.RecipientType;
-import javax.mail.MessagingException;
-import javax.mail.NoSuchProviderException;
-import javax.mail.Session;
-import javax.mail.Store;
-
-import org.apache.log4j.Logger;
-import org.testng.Reporter;
-
-import com.google.common.base.Stopwatch;
-
-/***
+/**
  * Checking email using pop3 protocol
- * 
- * @author kapilA
  *
+ * @author kapilA
  */
 public class Email implements IEmail {
-	private String host;
-	private String port;
-	private String userName;
-	private String password;
+	final private String host;
+	final private String port;
+	final private String userName;
+	final private String password;
+	private Properties props = System.getProperties();
 	private String folderName;
-	private MailProtocol protocol;
-
-	private String hostPropertyKey;
-	private String portPropertyKey;
-	private Store store;
 	private Folder folder;
+	private boolean sslEnabled;
 
 	private static final int maxcountEMailCheck = 10;
 	private static final Logger LOGGER = Logger.getLogger(Email.class);
 
 	private Email(Builder builder) {
+		MailProtocol protocol;
+
 		this.host = builder.host;
 		this.port = builder.port;
 		this.userName = builder.userName;
 		this.password = builder.password;
-		this.protocol = builder.protocol;
+		this.sslEnabled = builder.sslEnabled;
+		protocol = builder.protocol;
 		this.folderName = "Inbox";
 		connect(protocol);
 	}
 
 	private void connect(MailProtocol protocol) {
-		Properties props = System.getProperties();
 		Session session;
 		switch (protocol) {
-		case POP3:
-			hostPropertyKey = "mail.pop3.host";
-			portPropertyKey = "mail.pop3.port";
-			props.setProperty(hostPropertyKey, host);
-			props.setProperty(portPropertyKey, port);
-			session = Session.getInstance(props, null);
-			connectToStore("pop3", session);
-			break;
-		default:
-			hostPropertyKey = "mail.pop3.host";
-			portPropertyKey = "mail.pop3.port";
-			props.setProperty(hostPropertyKey, host);
-			props.setProperty(portPropertyKey, port);
-			session = Session.getInstance(props, null);
-			connectToStore("pop3", session);
-			break;
+			case POP3:
+				setPop3Config();
+				break;
+			case IMAP:
+				setImapConfig();
+				break;
+			case SMTP:
+				setSmtpConfig();
+				break;
+			default:
+				setPop3Config();
+				break;
+		}
+
+		session = Session.getInstance(props, new Authenticator() {
+			@Override
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication(userName, password);
+			}
+		});
+		connectToStore(protocol.toString().toLowerCase(), session);
+	}
+
+	private void setPop3Config() {
+		props.setProperty("mail.pop3.host", host);
+		props.setProperty("mail.pop3.port", port);
+		props.setProperty("mail.store.protocol", "pop3s");
+		props.setProperty("mail.pop3.user", userName);
+		if (sslEnabled) {
+			props.setProperty("mail.pop3.socketFactory.class",
+							  "javax.net.ssl.SSLSocketFactory");
+			props.setProperty("mail.pop3.socketFactory.fallback", "true");
+		}
+	}
+
+	private void setImapConfig() {
+		props.setProperty("mail.imap.host", host);
+		props.setProperty("mail.imap.port", port);
+		if (sslEnabled) {
+			props.setProperty("mail.imap.socketFactory.class",
+							  "javax.net.ssl.SSLSocketFactory");
+			props.setProperty("mail.imap.socketFactory.fallback", "false");
+		}
+	}
+
+	private void setSmtpConfig() {
+		props.setProperty("mail.smtp.host", host);
+		props.setProperty("mail.smtp.port", port);
+		props.setProperty("mail.smtp.auth", "true");
+		if (sslEnabled) {
+			props.setProperty("mail.smtp.starttls.enable", "true");
 		}
 	}
 
 	private void connectToStore(String protocol, Session session) {
+		Store store;
+
 		try {
 			store = session.getStore(protocol);
 			store.connect(userName, password);
@@ -106,11 +130,10 @@ public class Email implements IEmail {
 		}
 	}
 
-	/***
+	/**
 	 * Builder class to build email objects
-	 * 
+	 *
 	 * @author kapil
-	 * 
 	 */
 	public static class Builder {
 
@@ -118,6 +141,7 @@ public class Email implements IEmail {
 		private String port;
 		private String userName;
 		private String password;
+		private boolean sslEnabled = true;
 		private MailProtocol protocol = MailProtocol.POP3;
 
 		public Builder setHost(String host) {
@@ -145,123 +169,214 @@ public class Email implements IEmail {
 			return this;
 		}
 
+		public Builder setSSL(boolean sslEnabled) {
+			this.sslEnabled = sslEnabled;
+			return this;
+		}
+
 		public Email build() {
 			return new Email(this);
 		}
 	}
 
-	/***
+	/**
 	 * Return format of email Message
+	 *
+	 * @param msg message to return the mail format from
 	 */
-	@Override
 	public String getMailFormat(Message msg) {
 		String format = null;
 
 		try {
 			format = msg.getContentType();
 		} catch (MessagingException e) {
-
 			LOGGER.error(e);
 		}
 		return format;
 	}
 
-	private enum EMAIL_FILTER {
-		TO_ADDR, FROM_ADD, SUBJECT
-	}
-
-	/***
-	 * Return List of Message filter by Subject,From_ADD,To_ADDR
-	 * 
-	 * @param emailFilter
-	 * @param filterText
-	 *            :text present in Subject of email
-	 * @return
+	/**
+	 * Return List of Message filter by {@link FilterEmails} Element 0 is the newest one!!
+	 *
+	 * @param searchCat  enum
+	 * @param filterText :text present in Subject of email
+	 * @return list of messages
 	 */
-	public List<Message> getMessages(EMAIL_FILTER emailFilter, String filterText) {
+	public List<Message> getEmailsBy(FilterEmails searchCat, String filterText) {
 		Stopwatch sw = new Stopwatch();
 		sw.start();
 
-		List<Message> returnMessage = new ArrayList<Message>();
-		int loopCount;
+		int inboxMessageCount = getMailCount();
+
+		List<Message> returnMessages = new ArrayList<Message>();
 		try {
 			folder.open(Folder.READ_ONLY);
-			Message[] msgs = folder.getMessages();
-			int inboMessageCount = folder.getMessageCount();
-			LOGGER.info("Message count is:" + inboMessageCount);
-			if (inboMessageCount < maxcountEMailCheck) {
-				loopCount = 0;
-			} else {
-				loopCount = inboMessageCount - maxcountEMailCheck;
+			Message[] messages;
+			LOGGER.info("Message count in folder: " + folder.getName() + " is: " + inboxMessageCount);
+
+			int end = folder.getMessageCount();
+			int start = 1;
+
+			if (inboxMessageCount >= 10) {
+				start = end - maxcountEMailCheck + 1;
 			}
-			for (int i = inboMessageCount - 1; i >= loopCount; i--) {
-				switch (emailFilter) {
-				case SUBJECT:
-					if (msgs[i].getSubject().toString()
-							.equalsIgnoreCase(filterText)) {
-						returnMessage.add(msgs[i]);
-					}
-					break;
-				case FROM_ADD:
-					// Assumption is from address is only one
-					if (msgs[i].getFrom()[0].toString().contains(filterText)) {
-						returnMessage.add(msgs[i]);
-					}
-					break;
-				case TO_ADDR:
-					for (Address addr : msgs[i].getRecipients(RecipientType.TO)) {
-						LOGGER.info("Sno:" + i + "To Email Add is"
-								+ addr.toString());
-						if (addr.toString().contains(filterText)) {
-							returnMessage.add(msgs[i]);
-						}
-					}
-					break;
-				default:
-					break;
-				}
-			}
-			// CLose the folder
+
+			messages = folder.getMessages(start, end);
+
+			returnMessages = filterFromToSubject(searchCat, filterText, messages);
 			folder.close(true);
 		} catch (MessagingException e) {
 			LOGGER.error(e);
 		}
 		sw.stop();
-		LOGGER.info("Time Taken by getMessage is"
-				+ sw.elapsedTime(TimeUnit.SECONDS));
-		return returnMessage;
+		LOGGER.info("Time Taken by getMessage is: "
+							+ sw.elapsedTime(TimeUnit.SECONDS));
+		return returnMessages;
 	}
 
-	/***
-	 * Get the Body of the Email message
+	/**
+	 * Return List of Message filter by {@link FilterEmails}
+	 *
+	 * @param searchCat  enum
+	 * @param messages   the list of messages to filter
+	 * @param filterText :text present in Subject of email
+	 * @return list of messages
 	 */
-	@Override
-	public String getEmailBody(Message message) {
-		String line;
-		StringBuffer messageBody = new StringBuffer();
-		BufferedReader br = null;
+	public List<Message> filterEmailsBy(FilterEmails searchCat,
+			List<Message> messages, String filterText) {
+		try {
+			return filterFromToSubject(searchCat, filterText, messages.toArray(new Message[messages.size()]));
+		} catch (MessagingException e) {
+			// TODO Auto-generated catch block
+			LOGGER.error(e);
+		}
+		return null;
+	}
 
+	/**
+	 * Filter messages by {@link FilterEmails}
+	 *
+	 * @param searchCat  enum
+	 * @param filterText email address or subject to filter
+	 * @param messages   the list of messages to filter
+	 * @return list of messages
+	 * @throws MessagingException
+	 */
+	private List<Message> filterFromToSubject(FilterEmails searchCat, String filterText, Message[] messages)
+			throws MessagingException {
+		switch (searchCat) {
+			case FROM:
+				return filterFrom(filterText, messages);
+			case TO:
+				return filterTo(filterText, messages);
+			case SUBJECT:
+				return filterSubject(filterText, messages);
+			default:
+				break;
+		}
+		return null;
+	}
+
+	/**
+	 * Filter messages by FROM
+	 *
+	 * @param filterText email address to filter
+	 * @param messages   the list of messages to filter
+	 * @return list of messages
+	 * @throws MessagingException
+	 */
+	private List<Message> filterFrom(String filterText, Message[] messages) throws
+			MessagingException {
+		List<Message> returnMessages = new ArrayList<Message>();
+		for (Message msg : messages) {
+			if (msg.getFrom()[0].toString().contains(filterText)) {
+				returnMessages.add(msg);
+			}
+		}
+		return returnMessages;
+	}
+
+	/**
+	 * Filter messages by To
+	 *
+	 * @param filterText email address to filter
+	 * @param messages   the list of messages to filter
+	 * @return list of messages
+	 * @throws MessagingException
+	 */
+	private List<Message> filterTo(String filterText, Message[] messages) throws
+			MessagingException {
+		List<Message> returnMessages = new ArrayList<Message>();
+		for (Message msg : messages) {
+			for (Address addr : msg.getRecipients(RecipientType.TO)) {
+				if (addr.toString().contains(filterText)) {
+					returnMessages.add(msg);
+				}
+			}
+		}
+		return returnMessages;
+	}
+
+	/**
+	 * Filter messages by SUBJECT
+	 *
+	 * @param filterText subject to filter
+	 * @param messages   the list of messages to filter
+	 * @return list of messages
+	 * @throws MessagingException
+	 */
+	private List<Message> filterSubject(String filterText, Message[] messages) throws
+			MessagingException {
+		List<Message> returnMessages = new ArrayList<Message>();
+		for (Message msg : messages) {
+			if (msg.getSubject()
+				   .equalsIgnoreCase(filterText)) {
+				returnMessages.add(msg);
+			}
+		}
+		return returnMessages;
+	}
+
+	/**
+	 * Get the Body of the Email message
+	 *
+	 * @param message Message to get the mail body
+	 */
+	public String getEmailBody(Message message) {
+		Object content;
+		StringBuilder messageBody = new StringBuilder();
 		try {
 			folder.open(Folder.READ_ONLY);
-			br = new BufferedReader(new InputStreamReader(
-					message.getInputStream()));
-			while ((line = br.readLine()) != null) {
-				messageBody.append(line);
+			content = message.getContent();
+			if (content instanceof Multipart) {
+				Multipart mp = (Multipart) content;
+				for (int i = 0; i < mp.getCount(); i++) {
+					BodyPart bp = mp.getBodyPart(i);
+					if (Pattern.compile(Pattern.quote("text/html"), Pattern.CASE_INSENSITIVE)
+							   .matcher(bp.getContentType()).find()) {
+						messageBody.append(bp.getContent());
+					} else {
+						messageBody.append(bp.getContent());
+					}
+				}
+			} else {
+				messageBody.append(content);
 			}
-			br.close();
 			folder.close(true);
-		} catch (IOException e) {
-			LOGGER.error(e);
 		} catch (MessagingException e) {
-			LOGGER.error(e);
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 		return messageBody.toString();
 	}
 
-	/***
+	/**
 	 * Return the Html link in the body of email after the text
+	 *
+	 * @param message                        Message to parse the HTML link from
+	 * @param textAfterWhichtoFetchHtmlLinks search after the text for a html link
 	 */
-	@Override
 	public String getHTMLLinkAfterText(Message message,
 			String textAfterWhichtoFetchHtmlLinks) {
 
@@ -270,111 +385,63 @@ public class Email implements IEmail {
 		String httpLink = null;
 		// check if the URL is present
 		if (text.indexOf(textAfterWhichtoFetchHtmlLinks) != -1) {
-			filteredText = text.substring(text
-					.indexOf(textAfterWhichtoFetchHtmlLinks));
+			filteredText = text.substring(text.indexOf(textAfterWhichtoFetchHtmlLinks));
 			// ideally this should be the link
 			httpLink = filteredText.substring(filteredText.indexOf("http"))
-					.split(" ")[0].split(">")[0].split("\"")[0];
+								   .split(" ")[0].split(">")[0].split("\"")[0];
 		} else {
 			Reporter.log(text);
 		}
 		return httpLink;
 	}
 
-	/***
+	/**
 	 * if not set then folder name default is inbox Note in pop3 protocol folder
 	 * will always be inbox
+	 *
+	 * @param folderName the folder name to set
 	 */
-	@Override
 	public void setFolder(String folderName) {
 		this.folderName = folderName;
 	}
 
-	@Override
-	public List<Message> getEmailsByAdd(FilterEmails searchCat,
-			String emailAddress) {
-		switch (searchCat) {
-		case FROM:
-			return getMessages(EMAIL_FILTER.FROM_ADD, emailAddress);
-		case TO:
-			return getMessages(EMAIL_FILTER.TO_ADDR, emailAddress);
-		default:
-			break;
-		}
-		return null;
-	}
-
-	/***
-	 * Return List of email messages filtered by Subject text
-	 */
-	@Override
-	public List<Message> getEmailsBySubject(String subject) {
-		return getMessages(EMAIL_FILTER.SUBJECT, subject);
-	}
-
-	/***
-	 * Return list of email messages filter by {@link FilterEmails} To,From
-	 */
-	@Override
-	public List<Message> filterEmailsByAdd(FilterEmails searchCat,
-			Message[] messages, String emailAddress) {
-		List<Message> returnMessage = new ArrayList<Message>();
-		try {
-			switch (searchCat) {
-			case FROM:
-				for (Message msg : messages) {
-					if (msg.getFrom()[0].toString().contains(emailAddress)) {
-						returnMessage.add(msg);
-					}
-				}
-				break;
-			case TO:
-				for (Message msg : messages) {
-					for (Address addr : msg.getRecipients(RecipientType.TO)) {
-						if (addr.toString().contains(emailAddress)) {
-							returnMessage.add(msg);
-						}
-					}
-				}
-				break;
-			default:
-				break;
-			}
-		} catch (MessagingException e) {
-			// TODO Auto-generated catch block
-			LOGGER.error(e);
-		}
-		return null;
-	}
-
-	@Override
-	public List<Message> filerEmailsBySubject(List<Message> message,
-			String emailSubject) {
-		Stopwatch sw = new Stopwatch();
-		sw.start();
-		List<Message> returnMessage = new ArrayList<Message>();
-		LOGGER.info("Count of the message for filter by Subject"
-				+ message.size());
-		for (Message msg : message) {
-			try {
-				if (msg.getSubject().equalsIgnoreCase(emailSubject)) {
-					returnMessage.add(msg);
-				}
-			} catch (MessagingException e) {
-				// TODO Auto-generated catch block
-				LOGGER.error(e);
-			}
-		}
-		sw.stop();
-		LOGGER.info("Time Taken by Filter EmailBy Subjects is:"
-				+ sw.elapsedTime(TimeUnit.SECONDS));
-		return returnMessage;
-	}
-
-	@Override
-	public boolean checkPatternInEmail(Message message, String patterToMatch) {
-		// TODO Auto-generated method stub
+	public boolean verifyPatternInEmail(Message message, String patterToMatch) {
 		String messageBody = getEmailBody(message);
 		return Pattern.matches(messageBody, patterToMatch);
+	}
+
+	/**
+	 * Delete a message from folder
+	 *
+	 * @param message the message to delete from folder
+	 * @return boolean as result
+	 */
+	public boolean deleteMessage(Message message) {
+		int mailCountBefore = getMailCount();
+		try {
+			folder.open(Folder.READ_WRITE);
+			message.setFlag(Flags.Flag.DELETED, true);
+			folder.close(true);
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		}
+		return mailCountBefore > getMailCount();
+	}
+
+	/**
+	 * Get the count of mails in folder
+	 *
+	 * @return the count of mails in folder
+	 */
+	private int getMailCount() {
+		int mailCount = -1;
+		try {
+			folder.open(Folder.READ_ONLY);
+			mailCount = folder.getMessageCount();
+			folder.close(true);
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		}
+		return mailCount;
 	}
 }

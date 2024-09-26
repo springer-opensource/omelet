@@ -22,6 +22,8 @@ import java.util.UUID;
 
 import omelet.common.Utils;
 import omelet.data.IMethodContext;
+import omelet.data.IProperty;
+import omelet.data.driverconf.IBrowserConf;
 import omelet.testng.support.HtmlTable;
 import omelet.testng.support.MethodContextCollection;
 import omelet.testng.support.SAssert;
@@ -45,7 +47,7 @@ public class DriverInitialization implements IInvokedMethodListener {
 			.getLogger(DriverInitialization.class);
 	// output dir of TestNg currently being used in SAssert
 	public static String outPutDir;
-	
+
 	/***
 	 * This Method Set the driver if @BeforeMethod Configuration present if not
 	 * then set the driver for @Test Methods
@@ -54,6 +56,7 @@ public class DriverInitialization implements IInvokedMethodListener {
 	 */
 	public void beforeInvocation(IInvokedMethod method, ITestResult testResult) {
 		// Setting the output directory
+
 		if (outPutDir == null) {
 			outPutDir = testResult.getTestContext().getOutputDirectory();
 		}
@@ -65,11 +68,28 @@ public class DriverInitialization implements IInvokedMethodListener {
 		}
 
 		if (method.isTestMethod()) {
-			Driver.browserConf.set(null);
+			//if factory method is used then no need to set the browserConf to null ,it should be taken care in cleanup
+			if (!isPartOfFactoryTest(method)) {
+				Driver.browserConf.set(null);
+			}
 			// need as otherwise will produce unexpected output
 			SAssert.m_errors.get();
 			SAssert.assertMap.get();
 		}
+
+	}
+
+	private boolean isPartOfFactoryTest(IInvokedMethod method) {
+		java.lang.reflect.Method testMethod = method.getTestMethod()
+				.getConstructorOrMethod().getMethod();
+		if (testMethod.getGenericParameterTypes().length == 2
+				&& testMethod.getGenericParameterTypes()[0]
+						.equals(IBrowserConf.class)
+				&& testMethod.getGenericParameterTypes()[1]
+						.equals(IProperty.class)) {
+			return false;
+		}
+		return true;
 	}
 
 	/***
@@ -80,8 +100,12 @@ public class DriverInitialization implements IInvokedMethodListener {
 	 * @author kapilA
 	 */
 	public void afterInvocation(IInvokedMethod method, ITestResult testResult) {
-		if (method.isTestMethod()) {
-			IMethodContext methodContext = MethodContextCollection.getMethodContext(Utils.getFullMethodName(method.getTestMethod().getConstructorOrMethod().getMethod()));
+
+		if (method.isTestMethod() && !isPartOfFactoryTest(method)) {
+			IMethodContext methodContext = MethodContextCollection
+					.getMethodContext(Utils.getFullMethodName(method
+							.getTestMethod().getConstructorOrMethod()
+							.getMethod()));
 			boolean beforeMethodPresent = methodContext.isBeforeMethod();
 			boolean afterMethodShouldbePresent = methodContext.isAfterMethod();
 
@@ -90,12 +114,17 @@ public class DriverInitialization implements IInvokedMethodListener {
 
 			if (beforeMethodPresent) {
 				if (!afterMethodShouldbePresent) {
+
 					cleanup(method, testResult);
 				}
 			} else {
 				cleanup(method, testResult);
 			}
 		}
+		
+		//Set reports after every test cases irrespective is the test method is as part of factory or independent parallel run
+		//cleanReportingAfterEveryMethod(testResult);
+
 		// Check for AfterMethod if present check for browser and quit
 		if (method.getTestMethod().isAfterMethodConfiguration()) {
 			if (Driver.driver.get() != null) {
@@ -105,15 +134,6 @@ public class DriverInitialization implements IInvokedMethodListener {
 	}
 
 	
-
-	/***
-	 * Driver quit and clearing AssertMap in Soft Assert, Cleaning BrowserStack
-	 * Tunnel if at all present
-	 * 
-	 * @param method
-	 * @param testResult
-	 * @author kapilA
-	 */
 	private void cleanup(IInvokedMethod method, ITestResult testResult) {
 		try {
 			Reporter.setCurrentTestResult(testResult);
@@ -135,7 +155,13 @@ public class DriverInitialization implements IInvokedMethodListener {
 		}
 	}
 
-	
+	private void cleanReportingAfterEveryMethod(ITestResult testResult) {
+		Reporter.setCurrentTestResult(testResult);
+		publishHtmlTable(testResult);
+		addScreenShot(testResult);
+		SAssert.m_errors.get().clear();
+		SAssert.assertMap.get().clear();
+	}
 
 	/***
 	 * Adds HTML Table with data in the output report

@@ -22,8 +22,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import omelet.common.Utils;
+import omelet.data.IProperty;
 import omelet.data.MethodContext;
-import omelet.data.PrettyMessage;
+import omelet.data.driverconf.IBrowserConf;
 
 import org.apache.log4j.Logger;
 import org.testng.IAnnotationTransformer;
@@ -51,7 +52,7 @@ public class RetryIAnnotationTransformer implements IAnnotationTransformer,
 	@SuppressWarnings("rawtypes")
 	public void transform(ITestAnnotation annotation, Class testClass,
 			Constructor testConstructor, Method testMethod){		
-		if(testMethod != null)
+		if(testMethod != null && !isPartOfFactoryTest(testMethod))
 		{
 			MethodContext context = new MethodContext(testMethod);
 			context.setRetryAnalyser(annotation);
@@ -60,6 +61,8 @@ public class RetryIAnnotationTransformer implements IAnnotationTransformer,
 			//update methodContextCollection
 			methodContextHolder.put(Utils.getFullMethodName(testMethod), context);
 		}
+		
+		
 		//prettyMessage.swtichOffLogging();
 	/*	try {
 			t.join();
@@ -69,9 +72,19 @@ public class RetryIAnnotationTransformer implements IAnnotationTransformer,
 		
 	}
 	
+	private boolean isPartOfFactoryTest(Method testMethod) {
+		return !(testMethod.getGenericParameterTypes().length == 2
+				&& testMethod.getGenericParameterTypes()[0]
+				.equals(IBrowserConf.class)
+				&& testMethod.getGenericParameterTypes()[1]
+				.equals(IProperty.class));
+	}
+	
 	@SuppressWarnings("rawtypes")
 	public void transform(IConfigurationAnnotation annotation, Class testClass,
 			Constructor testConstructor, Method testMethod) {
+		//System.out.println(testConstructor.getName());
+		
 		
 	}
 
@@ -80,9 +93,19 @@ public class RetryIAnnotationTransformer implements IAnnotationTransformer,
 		//No need to add any implementation as we are overriding testng interface
 	}
 
-	public void transform(IFactoryAnnotation annotation, Method method) {
-		//TODO WHY?? Abstract?
-		//No need to add any implementation as we are overriding testng interface
+	/**
+	 * If we are using test factory for single execution of class then this will be called
+	 */
+	public void transform(IFactoryAnnotation annotation, Method testMethod) {
+		if(testMethod != null)
+		{
+			MethodContext context = new MethodContext(testMethod);
+			context.setDataProvider(annotation, testMethod);
+			context.prepareData();
+			//update methodContextCollection
+			methodContextHolder.put(Utils.getFullMethodName(testMethod), context);
+		}
+
 	}
 
 }

@@ -18,8 +18,8 @@
 <Mapping>
 	<Package name="tests" testData="TestData.xml"
 		runStrategy="Full">
-		<Class name="tests.SimpleGoogleTest" clientEnvironment="HtmlUnit.xml">
-			<MethodName name = "tests.SimpleGoogleTest.verifySeleniumTitle_XML" clientEnvironment="FireFoxLocal.xml"></MethodName>
+		<Class name="tests.SampleTest" clientEnvironment="HtmlUnit.xml">
+			<MethodName name = "tests.SampleTest.verifyOmeletGitPage_XML" clientEnvironment="HtmlUnit.xml"></MethodName>
 		</Class>
 		<!-- <Class name="com.springer.test.datatest.GoogleTest" clientEnvironment="browsers/FireFoxLocal.xml;browsers/ChromeLocal.xml"></Class> -->
 	</Package>

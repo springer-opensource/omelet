@@ -10,10 +10,17 @@
 		<listener class-name="omelet.driver.SuiteConfiguration"></listener>
 		<listener class-name="org.uncommons.reportng.HTMLReporter"></listener>
 	</listeners>
-	<test name="GoogleTestBasic" preserve-order="true" parallel="methods"
+	<!-- <test name="GoogleTestBasic" preserve-order="true" parallel="methods"
 		thread-count="2">
 		<classes>
 			<class name="tests.SimpleGoogleTest"></class>
+		</classes>
+	</test> -->
+	
+	<test name="SampleTestBasic" preserve-order="true" parallel="methods"
+		thread-count="2">
+		<classes>
+			<class name="tests.SampleTest"></class>
 		</classes>
 	</test>
 </suite> 

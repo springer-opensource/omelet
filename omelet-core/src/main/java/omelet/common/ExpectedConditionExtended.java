@@ -37,8 +37,6 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
  * NoSuchElementException ,If at all Custom FluentWait is the be used then catch
  * {@link NoSuchElementException}
  * 
- * Method are used in {@link DriverUtility}
- * 
  * @author kapilA
  * 
  */
@@ -58,7 +56,7 @@ public class ExpectedConditionExtended {
 	 * 
 	 * @param element
 	 *            : WebElement
-	 * @return
+	 * @return ExpectedCondition
 	 */
 	public static ExpectedCondition<WebElement> elementToBeClickable(
 			final WebElement element) {
@@ -91,7 +89,8 @@ public class ExpectedConditionExtended {
 	 * wait for the Element to be Disabled
 	 * 
 	 * @param element
-	 * @return
+	 *            : WebElement
+	 * @return boolean
 	 */
 	public static ExpectedCondition<Boolean> elementToBeDisabled(
 			final WebElement element) {
@@ -126,8 +125,9 @@ public class ExpectedConditionExtended {
 	 * An expectation for checking that an element is either invisible or not
 	 * present in the DOM.
 	 * 
-	 * @param locator
+	 * @param webelement
 	 *            used to find the element
+	 * @return boolean
 	 */
 	public static ExpectedCondition<Boolean> invisibilityOfElementLocated(
 			final WebElement webelement) {
@@ -160,6 +160,7 @@ public class ExpectedConditionExtended {
 	 * 
 	 * @param locator
 	 *            used to find the element
+	 * @return boolean
 	 */
 	public static ExpectedCondition<Boolean> invisibilityOfElementLocated(
 			final By locator) {
@@ -190,7 +191,8 @@ public class ExpectedConditionExtended {
 	 * if any of the WebElement is not click able will return false
 	 * 
 	 * @param elements
-	 * @return
+	 * 						list of WebElements
+	 * @return boolean
 	 */
 	public static ExpectedCondition<Boolean> elementsToBeClickable(
 			final WebElement... elements) {
@@ -230,7 +232,8 @@ public class ExpectedConditionExtended {
 	 * Check clikability for the list of WebElement
 	 * 
 	 * @param elements
-	 * @return
+	 * 						list of WebElements
+	 * @return boolean
 	 */
 	public static ExpectedCondition<Boolean> elementToBeClickable(
 			final List<WebElement> elements) {
@@ -255,7 +258,7 @@ public class ExpectedConditionExtended {
 				}
 				LOGGER.debug("element size is:" + elements.size()
 						+ " and is sucesfull list is:" + statusList.size());
-				return statusList.size() == elements.size() ? true : false;
+				return statusList.size() == elements.size();
 			}
 
 			@Override
@@ -269,7 +272,8 @@ public class ExpectedConditionExtended {
 	 * Check if all the element in the List are displayed
 	 * 
 	 * @param elements
-	 * @return
+	 * 						list of WebElements
+	 * @return boolean
 	 */
 	public static ExpectedCondition<Boolean> elementToBeDisplayed(
 			final List<WebElement> elements) {
@@ -289,7 +293,7 @@ public class ExpectedConditionExtended {
 						return null;
 					}
 				}
-				return statusList.size() == elements.size() ? true : false;
+				return statusList.size() == elements.size();
 			}
 
 			@Override

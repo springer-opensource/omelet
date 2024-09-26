@@ -9,11 +9,11 @@ import org.testng.IRetryAnalyzer;
 
 public interface IMethodContext {
 	
-	public List<IProperty> getMethodTestData();
-	public List<IBrowserConf> getBrowserConf();
-	public mapStrategy getRunStrategy();
-	public DataSource getDataProvider();
-	public boolean isAfterMethod();
-	public boolean isBeforeMethod();
-	public IRetryAnalyzer getRetryAnalyzer();
+	List<IProperty> getMethodTestData();
+	List<IBrowserConf> getBrowserConf();
+	mapStrategy getRunStrategy();
+	DataSource getDataProvider();
+	boolean isAfterMethod();
+	boolean isBeforeMethod();
+	IRetryAnalyzer getRetryAnalyzer();
 }

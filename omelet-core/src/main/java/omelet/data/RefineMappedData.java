@@ -11,7 +11,7 @@ import omelet.exception.FrameworkException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 /**
- * Refine data based on the hierarchy method-->Class-->Package
+ * Refine data based on the hierarchy method -- Class -- Package
  * take {@link IDataSource} and return 
  * @author kapil
  *
@@ -48,9 +48,9 @@ public class RefineMappedData {
 	private String getRefinedTestData(Method method) {
 		IMappingData methodVal = primaryDataMap.get(Utils.getFullMethodName(method));
 		IMappingData classVal = primaryDataMap.get(
-				method.getDeclaringClass().getName().toString());
+				method.getDeclaringClass().getName());
 		IMappingData packageVal = primaryDataMap.get(
-				method.getDeclaringClass().getPackage().getName().toString());
+				method.getDeclaringClass().getPackage().getName());
 
 		if (methodVal != null && StringUtils.isNotBlank(methodVal.getTestData())) {
 			return methodVal.getTestData();
@@ -69,9 +69,9 @@ public class RefineMappedData {
 		IMappingData methodClientData = primaryDataMap.get(
 				Utils.getFullMethodName(method));
 		IMappingData classClientData = primaryDataMap.get(
-				method.getDeclaringClass().getName().toString());
+				method.getDeclaringClass().getName());
 		IMappingData packageClientData = primaryDataMap.get(
-				method.getDeclaringClass().getPackage().getName().toString());
+				method.getDeclaringClass().getPackage().getName());
 
 		//if 1st entry is list is zero then for sure its fake list of client Environment
 		/*System.out.println("Method:"+methodClientData.getClientEnvironment().get(0));
@@ -93,9 +93,9 @@ public class RefineMappedData {
 		IMappingData methodRunStartegy = primaryDataMap.get(
 				Utils.getFullMethodName(method));
 		IMappingData classRunStartegy = primaryDataMap.get(
-				method.getDeclaringClass().getName().toString());
+				method.getDeclaringClass().getName());
 		IMappingData packageRunStartegy = primaryDataMap.get(
-				method.getDeclaringClass().getPackage().getName().toString());
+				method.getDeclaringClass().getPackage().getName());
 		if (methodRunStartegy != null && methodRunStartegy.getRunStartegy()!= null) {
 			return methodRunStartegy.getRunStartegy();
 		} else if (classRunStartegy != null && classRunStartegy.getRunStartegy() != null) {

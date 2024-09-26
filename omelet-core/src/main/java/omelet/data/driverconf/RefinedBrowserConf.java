@@ -16,18 +16,18 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 
 /**
  * Refine Browser data based on the Hierarchy
- * default-->Framework-->ClientEnv-->CommandLine
+ * default -- Framework -- ClientEnv -- CommandLine
  * 
  * @author kapil
  * 
  */
 public class RefinedBrowserConf {
 
-	private Map<String, String> clientBrowserData;
+	private final Map<String, String> clientBrowserData;
 	private boolean isFrameworkProperties;
 	private PropertyValueMin frameworkPropData = null;
 	private static final Logger LOGGER = Logger.getLogger(RefinedBrowserConf.class);
-	private String fileName;
+	private final String fileName;
 
 	public RefinedBrowserConf(Map<String, String> clientBrowserData,
 			String standBylookUpFileName) {

@@ -11,25 +11,20 @@
 <Conf>
 	<Data environment="staging">
 		<Pages>
-			<Page name="Google">
-				<url>https://www.google.com/</url>
-				<PageTimeOut>10</PageTimeOut>
+			<Page name="SpringerGit">
+				<url>https://github.com/springernature</url>
+				<value>omelet</value>
 			</Page>
-			<Page name="Selenium">
-				<Title>Selenium - Web Browser Automation</Title>
+		</Pages>
+	</Data>
+	
+	<Data environment="live">
+		<Pages>
+			<Page name="SpringerGit">
+				<url>https://github.com/springernature</url>
+				<value>omelet</value>
 			</Page>
 		</Pages>
 	</Data>
 
-	<Data environment="live">
-		<Pages>
-			<Page name="Google">
-				<url>https://www.google.com/</url>
-				<PageTimeOut>10</PageTimeOut>
-			</Page>
-			<Page name="Selenium">
-				<Title>Selenium - Web Browser Automation</Title>
-			</Page>
-		</Pages>
-	</Data>
 </Conf>

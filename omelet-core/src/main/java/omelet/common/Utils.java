@@ -55,8 +55,7 @@ public class Utils {
 	 * @return
 	 */
 	public static String getUniqueName(String text, int charCount) {
-		String trimText = (text + UUID.randomUUID()).substring(0, charCount);
-		return trimText;
+		return (text + UUID.randomUUID()).substring(0, charCount);
 	}
 
 	/***
@@ -77,8 +76,7 @@ public class Utils {
 	
 	public static String getFilePathForUpload(String fileName,Object className){
 		LOGGER.debug("File name recieved is:"+fileName);
-		String completepath = System.getProperty("user.dir")+File.separator+fileName;
-		return completepath;
+		return System.getProperty("user.dir")+File.separator+fileName;
 	}
 
 	/***

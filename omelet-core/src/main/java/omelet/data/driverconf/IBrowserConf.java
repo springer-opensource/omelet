@@ -20,36 +20,40 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 
 public interface IBrowserConf {
 
-	public String getBrowser();
+	String getBrowser();
 
 
-	public String getuserName();
+	String getuserName();
 
-	public String getKey();
+	String getKey();
 	
-	public String host();
+	String host();
 	
-	public String port();
+	String port();
 
-	public boolean isRemoteFlag();
+	boolean isRemoteFlag();
 
-	public Integer getDriverTimeOut();
+	Integer getDriverTimeOut();
 
-	public Integer getRetryFailedTestCaseCount();
+	Integer getRetryFailedTestCaseCount();
 
-	public String getLocalIEServerPath();
+	String getLocalIEServerPath();
 
-	public String getLocalChromeServerPath();
-
-	public boolean isHighLightElementFlag();
-
-	public boolean isScreenShotFlag();
+	String getLocalChromeServerPath();
 	
-	public String getDataSource();
+	String getLocalPhantomServerPath();
+
+	String getLocalFirefoxServerPath();
+
+	boolean isHighLightElementFlag();
+
+	boolean isScreenShotFlag();
 	
-	public DesiredCapabilities getCapabilities();
+	String getDataSource();
 	
-	public void updateCapabilities(DesiredCapabilities dc);
+	DesiredCapabilities getCapabilities();
+	
+	void updateCapabilities(DesiredCapabilities dc);
 	
 
 }

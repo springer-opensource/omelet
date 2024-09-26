@@ -29,10 +29,10 @@ import omelet.data.DataProvider.mapStrategy;
  */
 public interface IMappingData {
 
-	public String getTestData();
+	String getTestData();
 
-	public List<String> getClientEnvironment();
+	List<String> getClientEnvironment();
 
-	public mapStrategy getRunStartegy();
+	mapStrategy getRunStartegy();
 
 }
